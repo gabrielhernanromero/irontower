@@ -1,0 +1,12 @@
+export { default as Hero }         from "./Hero";
+export { default as StatsBar }     from "./StatsBar";
+export { default as WhyUs }        from "./WhyUs";
+export { default as Services }     from "./Services";
+export { default as About }        from "./About";
+export { default as Industries }   from "./Industries";
+export { default as Training }     from "./Training";
+export { default as FireSection }  from "./FireSection";
+export { default as Gallery }      from "./Gallery";
+export { default as Testimonials } from "./Testimonials";
+export { default as Contact }      from "./Contact";
+export { default as FAQ }          from "./FAQ";
