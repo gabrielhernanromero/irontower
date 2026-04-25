@@ -86,7 +86,7 @@ export default function Hero() {
         <p className="font-body font-light text-white/70 text-[17px] max-w-[520px] leading-[1.7] mb-10">
           Soluciones de altura con rigor técnico y seguridad certificada.
           Telecomunicaciones, incendio, limpieza de fachadas y capacitación
-          para consorcios e industrias en Buenos Aires.
+          para consorcios e industrias en toda la Argentina.
         </p>
 
         {/* CTAs */}

@@ -46,7 +46,7 @@ const contactItems = [
       </svg>
     ),
     label: "Zona de cobertura",
-    value: "CABA · Zona Norte · Zona Sur",
+    value: "Todo el país",
     href: null,
   },
 ];

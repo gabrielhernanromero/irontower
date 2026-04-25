@@ -5,6 +5,7 @@ const navLinks = [
   { label: "Nosotros",       href: "#nosotros" },
   { label: "Servicios",      href: "#servicios" },
   { label: "Capacitaciones", href: "#capacitaciones" },
+  { label: "Blog",           href: "/blog" },
   { label: "Contacto",       href: "#contacto" },
 ];
 
@@ -125,7 +126,7 @@ export default function Footer() {
                 </a>
               ))}
               <p className="font-body text-sm" style={{ color: "rgba(255,255,255,0.6)" }}>
-                CABA · Zona Norte · Zona Sur
+                Todo el país
               </p>
             </div>
           </div>
@@ -138,7 +139,7 @@ export default function Footer() {
           </p>
           <p className="font-condensed font-bold text-[11px] tracking-[0.15em] uppercase"
             style={{ color: "rgba(255,255,255,0.35)" }}>
-            Certificación IRATA · Buenos Aires, Argentina
+            Certificación IRATA · Argentina
           </p>
         </div>
       </div>

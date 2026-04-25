@@ -1,8 +1,8 @@
 const valores = [
   "Técnicos certificados IRATA nivel 1, 2 y 3",
   "Equipo multidisciplinario en telecomunicaciones, fachadas e incendios",
-  "Proyectos en CABA, Zona Norte y Zona Sur",
-  "Empresa joven con trayectoria consolidada",
+  "Proyectos en todo el territorio argentino",
+  "Empresa con trayectoria y experiencia comprobada",
 ];
 
 export default function About() {
@@ -15,12 +15,12 @@ export default function About() {
           <div>
             <span className="section-label">Sobre Iron Tower</span>
             <h2 className="section-title">
-              Jóvenes en altura,<br />sólidos en tierra.
+              Experiencia comprobada.<br />Resultados que hablan.
             </h2>
             <p className="section-sub mb-8">
-              Aunque somos una empresa emergente, combinamos juventud y trayectoria.
-              Nuestro equipo técnico multidisciplinario enfrenta cada proyecto con
-              profesionalismo, agilidad y visión moderna.
+              Iron Tower es una empresa consolidada con sólida trayectoria en trabajos verticales.
+              Nuestro equipo técnico multidisciplinario acumula proyectos en telecomunicaciones,
+              fachadas, rescate e incendios con el más alto estándar profesional a lo largo de todo el país.
             </p>
 
             {/* Checkmarks */}
@@ -100,9 +100,9 @@ export default function About() {
               className="absolute -bottom-5 -right-5 font-condensed font-bold text-[13px] tracking-[0.08em] uppercase text-white px-6 py-4"
               style={{ background: "#E8721C" }}
             >
-              <p>Empresa emergente</p>
+              <p>Empresa consolidada</p>
               <p className="text-white/80 font-normal text-xs mt-0.5 tracking-normal">
-                con experiencia consolidada
+                con experiencia comprobada
               </p>
             </div>
           </div>

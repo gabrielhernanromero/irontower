@@ -94,7 +94,7 @@ const services: Service[] = [
   {
     num: "06",
     title: "Prevención y rescate en altura",
-    desc: "Servicios de prevención, asistencia y rescate en trabajos verticales. Operamos en industrias, consorcios y sector público de CABA, Zona Norte y Sur.",
+    desc: "Servicios de prevención, asistencia y rescate en trabajos verticales. Operamos en industrias, consorcios y sector público de todo el territorio nacional.",
     tag: "Rescate",
     color: "#E8721C",
     image: "/images/services/rescate-alturas.jpeg",

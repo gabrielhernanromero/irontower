@@ -1,45 +1,79 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { GoogleAnalytics } from "@next/third-parties/google";
+import { Analytics } from "@vercel/analytics/react";
 
 export const metadata: Metadata = {
-  title: "Iron Tower | Trabajos en Altura Certificados IRATA — Buenos Aires",
+  title: "Iron Tower | Trabajos en Altura Certificados IRATA — Argentina",
   description:
-    "Iron Tower: especialistas en trabajos en altura, limpieza de fachadas, montaje de torres de telecomunicaciones y prevención de incendios en CABA, Zona Norte y Zona Sur. Técnicos certificados IRATA. Consultá por WhatsApp.",
+    "Iron Tower: empresa consolidada especializada en trabajos en altura, montaje de torres de telecomunicaciones, limpieza de fachadas, líneas de anclaje y prevención de incendios en toda la Argentina. Técnicos certificados IRATA niveles 1, 2 y 3.",
   keywords: [
-    "trabajos en altura Buenos Aires",
-    "limpieza de fachadas edificios",
-    "limpieza de cristales consorcios",
-    "montaje torres telecomunicaciones",
-    "prevención incendios CABA",
-    "líneas de anclaje",
-    "certificación IRATA Argentina",
-    "capacitación altura",
-    "brigadistas consorcios",
+    "trabajos en altura Argentina",
+    "técnicos IRATA Argentina",
     "rope access Argentina",
-    "limpieza fachadas GBA",
-    "habilitación contra incendios",
-    "carga de fuego Buenos Aires",
+    "trabajos verticales certificados",
+    "montaje torres telecomunicaciones Argentina",
+    "limpieza de fachadas Argentina",
+    "líneas de vida y anclaje",
+    "prevención incendios carga de fuego",
+    "rescate en altura Argentina",
+    "capacitaciones IRATA Argentina",
+    "empresa trabajos en altura certificada",
+    "técnicos certificados IRATA nivel 1 2 3",
+    "habilitación locales carga de fuego",
+    "limpieza de cristales consorcios",
+    "brigadistas consorcios",
+    "acceso por cuerdas Argentina",
+    "seguridad en altura industria",
+    "trabajos verticales industriales",
   ],
   authors: [{ name: "Iron Tower — Vertical Rope Work" }],
   robots: "index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1",
   openGraph: {
     type: "website",
     url: "https://www.irontowervrw.com.ar/",
-    title: "Iron Tower | Trabajos en Altura Certificados IRATA — Buenos Aires",
+    title: "Iron Tower | Trabajos en Altura Certificados IRATA — Argentina",
     description:
-      "Especialistas en limpieza de fachadas, montaje de torres, líneas de anclaje y prevención de incendios. Técnicos IRATA en CABA, Zona Norte y Sur.",
+      "Empresa consolidada especializada en trabajos verticales: montaje de torres, limpieza de fachadas, líneas de anclaje y prevención de incendios en todo el país. Técnicos IRATA niveles 1, 2 y 3.",
     locale: "es_AR",
     siteName: "Iron Tower Vertical Rope Work",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Iron Tower | Trabajos en Altura — Buenos Aires",
+    title: "Iron Tower | Trabajos en Altura Certificados IRATA — Argentina",
     description:
-      "Técnicos IRATA certificados. Limpieza de fachadas, torres de telecomunicaciones y prevención de incendios en Buenos Aires.",
+      "Técnicos IRATA certificados. Montaje de torres, limpieza de fachadas, rescate y prevención de incendios en toda la Argentina.",
   },
   alternates: {
     canonical: "https://www.irontowervrw.com.ar/",
   },
+};
+
+const schemaOrg = {
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  name: "Iron Tower — Vertical Rope Work",
+  description:
+    "Empresa consolidada especializada en trabajos en altura con certificación IRATA. Montaje de torres de telecomunicaciones, limpieza de fachadas, líneas de anclaje, capacitaciones y prevención de incendios en toda la Argentina.",
+  url: "https://www.irontowervrw.com.ar/",
+  telephone: "+54-11-2725-9135",
+  email: "irontowerta@gmail.com",
+  areaServed: {
+    "@type": "Country",
+    name: "Argentina",
+  },
+  hasCredential: {
+    "@type": "EducationalOccupationalCredential",
+    credentialCategory: "Certification",
+    name: "IRATA International Rope Access",
+  },
+  contactPoint: {
+    "@type": "ContactPoint",
+    telephone: "+54-11-2725-9135",
+    contactType: "customer service",
+    availableLanguage: "Spanish",
+  },
+  sameAs: ["https://www.instagram.com/irontowervrww"],
 };
 
 export default function RootLayout({
@@ -49,7 +83,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
-      <body>{children}</body>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaOrg) }}
+        />
+      </head>
+      <body>
+        {children}
+        <Analytics />
+      </body>
+      {process.env.NEXT_PUBLIC_GA_ID && (
+        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
+      )}
     </html>
   );
 }

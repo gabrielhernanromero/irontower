@@ -9,11 +9,11 @@ const faqs = [
   },
   {
     q: "¿Hacen limpieza de fachadas y cristales en edificios de consorcios?",
-    a: "Sí. Iron Tower se especializa en limpieza de fachadas, vidriados y cristales en altura para consorcios, edificios de departamentos y propiedades comerciales en CABA, Zona Norte y Zona Sur de GBA.",
+    a: "Sí. Iron Tower se especializa en limpieza de fachadas, vidriados y cristales en altura para consorcios, edificios de departamentos y propiedades comerciales en todo el territorio argentino.",
   },
   {
-    q: "¿En qué zonas de Buenos Aires trabajan?",
-    a: "Operamos en Ciudad Autónoma de Buenos Aires (CABA), Zona Norte del Gran Buenos Aires y Zona Sur del Gran Buenos Aires.",
+    q: "¿En qué zonas del país trabajan?",
+    a: "Operamos en todo el territorio argentino. Nuestro equipo se desplaza a cualquier punto del país para proyectos industriales, consorcios y sector público.",
   },
   {
     q: "¿Ofrecen capacitaciones para brigadistas de consorcios?",

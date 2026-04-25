@@ -83,7 +83,7 @@ export default function FireSection() {
                 "Inspecciones certificadas",
                 "Informes técnicos oficiales",
                 "Capacitación de brigadistas",
-                "Cobertura CABA y GBA",
+                "Cobertura nacional",
               ].map((h) => (
                 <div key={h} className="flex items-center gap-3">
                   <div
