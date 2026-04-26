@@ -4,20 +4,9 @@ import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import Image from "next/image";
+import TagSelector from "@/components/blog/TagSelector";
 
 const RichTextEditor = dynamic(() => import("@/components/blog/RichTextEditor"), { ssr: false });
-
-const TAGS_SUGERIDOS = [
-  "Trabajos en altura",
-  "Telecomunicaciones",
-  "Fachadas",
-  "Incendios",
-  "Capacitación",
-  "Rescate",
-  "IRATA",
-  "Seguridad",
-  "Proyectos realizados",
-];
 
 const AI_PROMPT = `Sos redactor de contenido para Iron Tower, empresa argentina especializada en trabajos en altura con certificación IRATA. Escribí un artículo de blog en español rioplatense sobre [TEMA DEL ARTÍCULO].
 
@@ -69,10 +58,6 @@ export default function NewPostPage() {
   const handleTitleChange = (v: string) => {
     setTitle(v);
     if (!slug || slug === slugify(title)) setSlug(slugify(v));
-  };
-
-  const toggleTag = (tag: string) => {
-    setTags((prev) => prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]);
   };
 
   const uploadCover = async (file: File) => {
@@ -319,25 +304,9 @@ export default function NewPostPage() {
           <div className="bg-white rounded-[4px] p-6 border border-brand-light-border">
             <h3 className="font-condensed font-bold text-brand-ink mb-1">Etiquetas</h3>
             <p className="font-body text-xs text-brand-muted mb-4">
-              Elegí las etiquetas que la IA indicó en el campo TAGS. Seleccioná entre 1 y 3.
+              Seleccioná las que indicó la IA o creá etiquetas propias.
             </p>
-            <div className="flex flex-wrap gap-2">
-              {TAGS_SUGERIDOS.map((tag) => (
-                <button
-                  key={tag}
-                  type="button"
-                  onClick={() => toggleTag(tag)}
-                  className="font-body text-xs px-3 py-1.5 rounded-full border transition-colors"
-                  style={{
-                    borderColor: tags.includes(tag) ? "#0e4d7a" : "#d0e8f7",
-                    background: tags.includes(tag) ? "rgba(14,77,122,0.08)" : "#fff",
-                    color: tags.includes(tag) ? "#0e4d7a" : "#6a8aaa",
-                  }}
-                >
-                  {tags.includes(tag) ? "✓ " : ""}{tag}
-                </button>
-              ))}
-            </div>
+            <TagSelector tags={tags} onChange={setTags} />
           </div>
 
         </div>

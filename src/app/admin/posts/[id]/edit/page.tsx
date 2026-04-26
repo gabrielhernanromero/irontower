@@ -4,20 +4,9 @@ import { useState, useRef, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import dynamic from "next/dynamic";
 import Image from "next/image";
+import TagSelector from "@/components/blog/TagSelector";
 
 const RichTextEditor = dynamic(() => import("@/components/blog/RichTextEditor"), { ssr: false });
-
-const TAGS_SUGERIDOS = [
-  "Trabajos en altura",
-  "Telecomunicaciones",
-  "Fachadas",
-  "Incendios",
-  "Capacitación",
-  "Rescate",
-  "IRATA",
-  "Seguridad",
-  "Proyectos realizados",
-];
 
 function slugify(text: string) {
   return text
@@ -60,10 +49,6 @@ export default function EditPostPage() {
       setLoaded(true);
     });
   }, [id]);
-
-  const toggleTag = (tag: string) => {
-    setTags((prev) => prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]);
-  };
 
   const uploadCover = async (file: File) => {
     const form = new FormData();
@@ -209,24 +194,9 @@ export default function EditPostPage() {
           </div>
 
           <div className="bg-white rounded-[4px] p-6 border border-brand-light-border">
-            <h3 className="font-condensed font-bold text-brand-ink mb-4">Etiquetas</h3>
-            <div className="flex flex-wrap gap-2">
-              {TAGS_SUGERIDOS.map((tag) => (
-                <button
-                  key={tag}
-                  type="button"
-                  onClick={() => toggleTag(tag)}
-                  className="font-body text-xs px-3 py-1.5 rounded-full border transition-colors"
-                  style={{
-                    borderColor: tags.includes(tag) ? "#0e4d7a" : "#d0e8f7",
-                    background: tags.includes(tag) ? "rgba(14,77,122,0.08)" : "#fff",
-                    color: tags.includes(tag) ? "#0e4d7a" : "#6a8aaa",
-                  }}
-                >
-                  {tag}
-                </button>
-              ))}
-            </div>
+            <h3 className="font-condensed font-bold text-brand-ink mb-1">Etiquetas</h3>
+            <p className="font-body text-xs text-brand-muted mb-4">Seleccioná las predefinidas o creá etiquetas nuevas.</p>
+            <TagSelector tags={tags} onChange={setTags} />
           </div>
         </div>
       </div>
