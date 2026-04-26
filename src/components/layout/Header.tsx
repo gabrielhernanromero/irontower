@@ -3,12 +3,12 @@
 import { useState } from "react";
 
 const navLinks = [
-  { label: "Inicio",          href: "#inicio" },
-  { label: "Nosotros",        href: "#nosotros" },
-  { label: "Servicios",       href: "#servicios" },
-  { label: "Capacitaciones",  href: "#capacitaciones" },
+  { label: "Inicio",          href: "/#inicio" },
+  { label: "Nosotros",        href: "/#nosotros" },
+  { label: "Servicios",       href: "/#servicios" },
+  { label: "Capacitaciones",  href: "/#capacitaciones" },
   { label: "Blog",            href: "/blog" },
-  { label: "Contacto",        href: "#contacto" },
+  { label: "Contacto",        href: "/#contacto" },
 ];
 
 const WA_URL =
@@ -24,7 +24,7 @@ export default function Header() {
         style={{ background: "rgba(255,255,255,0.97)" }}
       >
         {/* Logo */}
-        <a href="#inicio" className="flex items-center gap-3">
+        <a href="/#inicio" className="flex items-center gap-3">
           <div className="flex flex-col leading-none">
             <span className="font-condensed font-black text-brand-ink tracking-wide text-xl">
               IRON<span className="text-brand-orange">TOWER</span>
