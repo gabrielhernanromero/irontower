@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 
 const WA_URL =
   "https://wa.me/541127259135?text=Hola,%20quiero%20consultar%20sobre%20los%20servicios";
@@ -13,6 +14,7 @@ interface Service {
   color: string;
   image: string;
   imageAlt: string;
+  href: string;
   icon: React.ReactNode;
 }
 
@@ -24,7 +26,8 @@ const services: Service[] = [
     tag: "Telecomunicaciones",
     color: "#0e4d7a",
     image: "/images/services/montaje-torres.jpg",
-    imageAlt: "Técnico Iron Tower trabajando en torre de telecomunicaciones",
+    imageAlt: "Técnico certificado IRATA en montaje de torre de telecomunicaciones — Iron Tower Argentina",
+    href: "/montaje-torres",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={1.8} className="w-10 h-10">
         <rect x="3" y="3" width="4" height="18" /><rect x="17" y="3" width="4" height="18" />
@@ -39,7 +42,8 @@ const services: Service[] = [
     tag: "Seguridad en altura",
     color: "#E8721C",
     image: "/images/services/anclaje.webp",
-    imageAlt: "Sistemas de anclaje y líneas de vida certificados",
+    imageAlt: "Sistema de anclaje y línea de vida certificado instalado por Iron Tower — edificio Argentina",
+    href: "/lineas-anclaje",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={1.8} className="w-10 h-10">
         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
@@ -53,7 +57,8 @@ const services: Service[] = [
     tag: "★ Estrella consorcios",
     color: "#0e4d7a",
     image: "/images/services/fachadas-cristales.webp",
-    imageAlt: "Limpieza de fachadas y cristales en altura",
+    imageAlt: "Limpieza de fachadas y cristales en altura para consorcios — Iron Tower Argentina",
+    href: "/limpieza-fachadas",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={1.8} className="w-10 h-10">
         <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
@@ -68,7 +73,8 @@ const services: Service[] = [
     tag: "Prevención",
     color: "#E8721C",
     image: "/images/services/gci-incendios.jpg",
-    imageAlt: "Guardia Contra Incendios — equipo Iron Tower en acción",
+    imageAlt: "Servicio prevención de incendios y habilitación comercial — Iron Tower Argentina",
+    href: "/prevencion-incendios",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={1.8} className="w-10 h-10">
         <path d="M12 2c0 0-8 4-8 10a8 8 0 0 0 16 0c0-6-8-10-8-10z" />
@@ -83,7 +89,8 @@ const services: Service[] = [
     tag: "Capacitación",
     color: "#0e4d7a",
     image: "/images/services/capacitaciones.jpg",
-    imageAlt: "Capacitación con arneses — trabajo seguro en altura",
+    imageAlt: "Capacitación en trabajo en altura con arneses — Iron Tower forma operarios en Argentina",
+    href: "/capacitacion-altura",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={1.8} className="w-10 h-10">
         <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
@@ -98,7 +105,8 @@ const services: Service[] = [
     tag: "Rescate",
     color: "#E8721C",
     image: "/images/services/rescate-alturas.jpeg",
-    imageAlt: "Iron Tower — prevención y rescate en espacio confinado",
+    imageAlt: "Técnico IRATA en operación de rescate en altura y espacio confinado — Iron Tower Argentina",
+    href: "/rescate-altura",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={1.8} className="w-10 h-10">
         <circle cx="12" cy="12" r="10" /><path d="M12 8v4l3 3" />
@@ -159,12 +167,21 @@ export default function Services() {
                 <p className="font-body text-sm text-brand-mid leading-[1.7] mb-5 flex-1">
                   {svc.desc}
                 </p>
-                <span
-                  className="inline-block font-body text-[12px] tracking-[0.08em] uppercase px-4 py-1.5 border-[1.5px] rounded-[2px] w-fit"
-                  style={{ borderColor: svc.color, color: svc.color }}
-                >
-                  {svc.tag}
-                </span>
+                <div className="flex items-center justify-between">
+                  <span
+                    className="inline-block font-body text-[12px] tracking-[0.08em] uppercase px-4 py-1.5 border-[1.5px] rounded-[2px]"
+                    style={{ borderColor: svc.color, color: svc.color }}
+                  >
+                    {svc.tag}
+                  </span>
+                  <Link
+                    href={svc.href}
+                    className="font-condensed font-bold text-[13px] tracking-[0.06em] uppercase transition-colors hover:text-brand-orange"
+                    style={{ color: svc.color }}
+                  >
+                    Ver más →
+                  </Link>
+                </div>
               </div>
             </div>
           ))}
