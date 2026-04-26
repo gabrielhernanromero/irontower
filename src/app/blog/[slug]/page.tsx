@@ -129,14 +129,27 @@ export default async function BlogPostPage({ params }: Props) {
               </div>
             )}
 
-            <h1 className="font-condensed font-black text-brand-ink leading-tight mb-8" style={{ fontSize: "clamp(2rem, 5vw, 3rem)" }}>
+            <h1 className="font-condensed font-black text-brand-ink leading-tight mb-6" style={{ fontSize: "clamp(2rem, 5vw, 3rem)" }}>
               {post.title}
             </h1>
+
+            <hr className="border-brand-light-border mb-10" />
 
             {/* Content */}
             {post.content && (
               <div
-                className="prose prose-lg max-w-none font-body text-brand-ink prose-headings:font-condensed prose-headings:font-black prose-a:text-brand-blue-dark prose-img:rounded-[4px]"
+                className="prose prose-lg max-w-none font-body
+                  prose-headings:font-condensed prose-headings:font-black prose-headings:text-brand-ink prose-headings:leading-tight
+                  prose-h2:text-[1.6rem] prose-h2:mt-12 prose-h2:mb-4
+                  prose-h3:text-[1.25rem] prose-h3:mt-8 prose-h3:mb-3
+                  prose-p:text-brand-mid prose-p:leading-[1.8]
+                  prose-a:text-brand-blue-dark prose-a:no-underline hover:prose-a:underline
+                  prose-strong:text-brand-ink prose-strong:font-bold
+                  prose-ul:my-5 prose-ul:list-disc prose-ul:pl-6
+                  prose-ol:my-5 prose-ol:pl-6
+                  prose-li:text-brand-mid prose-li:my-2 prose-li:leading-[1.7]
+                  prose-blockquote:border-l-4 prose-blockquote:border-brand-orange prose-blockquote:bg-brand-light-bg prose-blockquote:rounded-r-[4px] prose-blockquote:px-6 prose-blockquote:py-4 prose-blockquote:not-italic prose-blockquote:text-brand-mid
+                  prose-img:rounded-[4px] prose-img:shadow-md"
                 dangerouslySetInnerHTML={{ __html: post.content }}
               />
             )}
