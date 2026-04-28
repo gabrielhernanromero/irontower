@@ -17,10 +17,10 @@ export const metadata: Metadata = {
     title: "Capacitación en Trabajo en Altura — Iron Tower Argentina",
     description:
       "Cursos certificados de trabajo seguro en altura para operarios y brigadistas. Respaldo IRATA. Todo el país.",
-    url: "https://www.irontowervrw.com.ar/capacitacion-altura",
+    url: "https://www.irontowerarg.com/capacitacion-altura",
     type: "website",
   },
-  alternates: { canonical: "https://www.irontowervrw.com.ar/capacitacion-altura" },
+  alternates: { canonical: "https://www.irontowerarg.com/capacitacion-altura" },
 };
 
 const schema = {
@@ -32,7 +32,7 @@ const schema = {
   provider: {
     "@type": "Organization",
     name: "Iron Tower — Vertical Rope Work",
-    url: "https://www.irontowervrw.com.ar",
+    url: "https://www.irontowerarg.com",
     telephone: "+54-11-2725-9135",
   },
   areaServed: "Argentina",

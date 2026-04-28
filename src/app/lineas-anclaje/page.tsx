@@ -17,10 +17,10 @@ export const metadata: Metadata = {
     title: "Líneas de Vida y Puntos de Anclaje — Iron Tower",
     description:
       "Instalamos sistemas de anclaje y líneas de vida certificados para trabajos en altura seguros. Todo el país.",
-    url: "https://www.irontowervrw.com.ar/lineas-anclaje",
+    url: "https://www.irontowerarg.com/lineas-anclaje",
     type: "website",
   },
-  alternates: { canonical: "https://www.irontowervrw.com.ar/lineas-anclaje" },
+  alternates: { canonical: "https://www.irontowerarg.com/lineas-anclaje" },
 };
 
 const schema = {
@@ -32,7 +32,7 @@ const schema = {
   provider: {
     "@type": "Organization",
     name: "Iron Tower — Vertical Rope Work",
-    url: "https://www.irontowervrw.com.ar",
+    url: "https://www.irontowerarg.com",
     telephone: "+54-11-2725-9135",
   },
   areaServed: "Argentina",

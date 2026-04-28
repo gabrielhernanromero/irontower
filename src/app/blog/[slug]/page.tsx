@@ -81,7 +81,7 @@ export default async function BlogPostPage({ params }: Props) {
     datePublished: post.created_at,
     dateModified: post.updated_at,
     author: { "@type": "Organization", name: "Iron Tower — Vertical Rope Work" },
-    publisher: { "@type": "Organization", name: "Iron Tower", logo: { "@type": "ImageObject", url: "https://www.irontowervrw.com.ar/favicon.ico" } },
+    publisher: { "@type": "Organization", name: "Iron Tower", logo: { "@type": "ImageObject", url: "https://www.irontowerarg.com/favicon.ico" } },
   };
 
   return (

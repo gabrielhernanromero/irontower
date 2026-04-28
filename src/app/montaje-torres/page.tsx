@@ -17,10 +17,10 @@ export const metadata: Metadata = {
     title: "Montaje de Torres de Telecomunicaciones — Iron Tower",
     description:
       "Instalación y mantenimiento de torres de telecomunicaciones en toda la Argentina. Técnicos IRATA certificados.",
-    url: "https://www.irontowervrw.com.ar/montaje-torres",
+    url: "https://www.irontowerarg.com/montaje-torres",
     type: "website",
   },
-  alternates: { canonical: "https://www.irontowervrw.com.ar/montaje-torres" },
+  alternates: { canonical: "https://www.irontowerarg.com/montaje-torres" },
 };
 
 const schema = {
@@ -32,7 +32,7 @@ const schema = {
   provider: {
     "@type": "Organization",
     name: "Iron Tower — Vertical Rope Work",
-    url: "https://www.irontowervrw.com.ar",
+    url: "https://www.irontowerarg.com",
     telephone: "+54-11-2725-9135",
   },
   areaServed: "Argentina",

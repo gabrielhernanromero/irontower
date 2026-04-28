@@ -31,7 +31,7 @@ export const metadata: Metadata = {
   robots: "index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1",
   openGraph: {
     type: "website",
-    url: "https://www.irontowervrw.com.ar/",
+    url: "https://www.irontowerarg.com/",
     title: "Iron Tower | Trabajos en Altura Certificados IRATA — Argentina",
     description:
       "Empresa consolidada especializada en trabajos verticales: montaje de torres, limpieza de fachadas, líneas de anclaje y prevención de incendios en todo el país. Técnicos IRATA niveles 1, 2 y 3.",
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
       "Técnicos IRATA certificados. Montaje de torres, limpieza de fachadas, rescate y prevención de incendios en toda la Argentina.",
   },
   alternates: {
-    canonical: "https://www.irontowervrw.com.ar/",
+    canonical: "https://www.irontowerarg.com/",
   },
 };
 
@@ -55,7 +55,7 @@ const schemaOrg = {
   name: "Iron Tower — Vertical Rope Work",
   description:
     "Empresa consolidada especializada en trabajos en altura con certificación IRATA. Montaje de torres de telecomunicaciones, limpieza de fachadas, líneas de anclaje, capacitaciones y prevención de incendios en toda la Argentina.",
-  url: "https://www.irontowervrw.com.ar/",
+  url: "https://www.irontowerarg.com/",
   telephone: "+54-11-2725-9135",
   email: "irontowerta@gmail.com",
   areaServed: {

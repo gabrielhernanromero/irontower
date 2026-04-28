@@ -18,10 +18,10 @@ export const metadata: Metadata = {
     title: "Prevención de Incendios y Habilitación Comercial — Iron Tower",
     description:
       "Informe de carga de fuego, habilitación de locales e industrias y planes de evacuación en toda la Argentina.",
-    url: "https://www.irontowervrw.com.ar/prevencion-incendios",
+    url: "https://www.irontowerarg.com/prevencion-incendios",
     type: "website",
   },
-  alternates: { canonical: "https://www.irontowervrw.com.ar/prevencion-incendios" },
+  alternates: { canonical: "https://www.irontowerarg.com/prevencion-incendios" },
 };
 
 const schema = {
@@ -33,7 +33,7 @@ const schema = {
   provider: {
     "@type": "Organization",
     name: "Iron Tower — Vertical Rope Work",
-    url: "https://www.irontowervrw.com.ar",
+    url: "https://www.irontowerarg.com",
     telephone: "+54-11-2725-9135",
   },
   areaServed: "Argentina",

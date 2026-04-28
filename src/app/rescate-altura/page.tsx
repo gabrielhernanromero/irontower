@@ -17,10 +17,10 @@ export const metadata: Metadata = {
     title: "Rescate en Altura y Espacios Confinados — Iron Tower",
     description:
       "Rescate profesional en altura y espacios confinados. Técnicos IRATA certificados. Respuesta rápida en toda la Argentina.",
-    url: "https://www.irontowervrw.com.ar/rescate-altura",
+    url: "https://www.irontowerarg.com/rescate-altura",
     type: "website",
   },
-  alternates: { canonical: "https://www.irontowervrw.com.ar/rescate-altura" },
+  alternates: { canonical: "https://www.irontowerarg.com/rescate-altura" },
 };
 
 const schema = {
@@ -32,7 +32,7 @@ const schema = {
   provider: {
     "@type": "Organization",
     name: "Iron Tower — Vertical Rope Work",
-    url: "https://www.irontowervrw.com.ar",
+    url: "https://www.irontowerarg.com",
     telephone: "+54-11-2725-9135",
   },
   areaServed: "Argentina",

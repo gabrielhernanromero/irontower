@@ -17,10 +17,10 @@ export const metadata: Metadata = {
     title: "Limpieza de Fachadas y Cristales — Iron Tower",
     description:
       "Limpieza profesional de fachadas y cristales en altura para consorcios y edificios. Técnicos IRATA en toda la Argentina.",
-    url: "https://www.irontowervrw.com.ar/limpieza-fachadas",
+    url: "https://www.irontowerarg.com/limpieza-fachadas",
     type: "website",
   },
-  alternates: { canonical: "https://www.irontowervrw.com.ar/limpieza-fachadas" },
+  alternates: { canonical: "https://www.irontowerarg.com/limpieza-fachadas" },
 };
 
 const schema = {
@@ -32,7 +32,7 @@ const schema = {
   provider: {
     "@type": "Organization",
     name: "Iron Tower — Vertical Rope Work",
-    url: "https://www.irontowervrw.com.ar",
+    url: "https://www.irontowerarg.com",
     telephone: "+54-11-2725-9135",
   },
   areaServed: "Argentina",

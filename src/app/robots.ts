@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: "/admin/",
     },
-    sitemap: "https://www.irontowervrw.com.ar/sitemap.xml",
+    sitemap: "https://www.irontowerarg.com/sitemap.xml",
   };
 }
