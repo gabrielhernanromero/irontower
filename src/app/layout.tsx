@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { GoogleAnalytics } from "@next/third-parties/google";
 import { Analytics } from "@vercel/analytics/react";
 
 export const metadata: Metadata = {
@@ -85,6 +84,15 @@ export default function RootLayout({
     <html lang="es">
       <head>
         <script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-2FKFDS6EFL"
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-2FKFDS6EFL');`,
+          }}
+        />
+        <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaOrg) }}
         />
@@ -93,9 +101,6 @@ export default function RootLayout({
         {children}
         <Analytics />
       </body>
-      {process.env.NEXT_PUBLIC_GA_ID && (
-        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
-      )}
     </html>
   );
 }
