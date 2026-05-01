@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import type { PostBlocks, TemplateStructure } from "@/types/blocks";
 
 export interface Post {
   id: string;
@@ -11,6 +12,16 @@ export interface Post {
   published: boolean;
   created_at: string;
   updated_at: string;
+  template_id: string | null;
+  blocks: PostBlocks | null;
+  post_templates?: { structure: TemplateStructure } | null;
+}
+
+export interface PostTemplate {
+  id: string;
+  name: string;
+  structure: TemplateStructure;
+  created_at: string;
 }
 
 function getUrl() {

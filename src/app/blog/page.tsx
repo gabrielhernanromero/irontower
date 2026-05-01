@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { supabase, Post } from "@/lib/supabase";
-import PostCard from "@/components/blog/PostCard";
+import BlogPostsGrid from "@/components/blog/BlogPostsGrid";
 import { Header, Footer } from "@/components/layout";
 import Link from "next/link";
 
@@ -55,22 +55,7 @@ export default async function BlogPage() {
         {/* Posts */}
         <section className="px-[5%] py-[80px]" style={{ background: "#f0f6fb" }}>
           <div className="max-w-[1200px] mx-auto">
-            {posts.length === 0 ? (
-              <div className="text-center py-20">
-                <p className="font-condensed font-bold text-2xl text-brand-ink mb-3">
-                  Próximamente
-                </p>
-                <p className="font-body text-brand-mid">
-                  Estamos preparando el contenido. ¡Volvé pronto!
-                </p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {posts.map((post) => (
-                  <PostCard key={post.id} post={post} />
-                ))}
-              </div>
-            )}
+            <BlogPostsGrid posts={posts} />
           </div>
         </section>
 

@@ -4,6 +4,10 @@ import Image from "next/image";
 import { supabase, Post } from "@/lib/supabase";
 import { Header, Footer } from "@/components/layout";
 import BlogCTA from "@/components/blog/BlogCTA";
+import ReadingProgress from "@/components/blog/ReadingProgress";
+import ShareButton from "@/components/blog/ShareButton";
+import BlockRenderer from "@/components/blog/renderer/BlockRenderer";
+import type { PostBlocks } from "@/types/blocks";
 import Link from "next/link";
 
 export const revalidate = 60;
@@ -16,7 +20,7 @@ async function getPost(slug: string): Promise<Post | null> {
   try {
     const { data } = await supabase()
       .from("posts")
-      .select("*")
+      .select("*, post_templates(structure)")
       .eq("slug", slug)
       .eq("published", true)
       .single();
@@ -84,13 +88,16 @@ export default async function BlogPostPage({ params }: Props) {
     publisher: { "@type": "Organization", name: "Iron Tower", logo: { "@type": "ImageObject", url: "https://www.irontowerarg.com/favicon.ico" } },
   };
 
+  const hasBlocks = !!post.template_id && !!post.blocks;
+
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
+      <ReadingProgress />
       <Header />
       <main>
-        {/* Cover */}
-        {post.cover_image && (
+        {/* Cover — only shown on text posts; block posts may have a Hero block */}
+        {post.cover_image && !hasBlocks && (
           <div className="relative h-[50vh] min-h-[320px] w-full">
             <Image
               src={post.cover_image}
@@ -106,7 +113,7 @@ export default async function BlogPostPage({ params }: Props) {
 
         {/* Article */}
         <article className="px-[5%] py-16">
-          <div className="max-w-[800px] mx-auto">
+          <div className={hasBlocks ? "max-w-[1100px] mx-auto" : "max-w-[800px] mx-auto"}>
             {/* Meta */}
             <div className="flex flex-wrap items-center gap-3 mb-6">
               <Link href="/blog" className="font-condensed font-bold text-[11px] tracking-[0.12em] uppercase hover:text-brand-orange transition-colors" style={{ color: "#0e4d7a" }}>
@@ -129,16 +136,26 @@ export default async function BlogPostPage({ params }: Props) {
               </div>
             )}
 
-            <h1 className="font-condensed font-black text-brand-ink leading-tight mb-6" style={{ fontSize: "clamp(2rem, 5vw, 3rem)" }}>
-              {post.title}
-            </h1>
+            {!hasBlocks && (
+              <h1 className="font-condensed font-black text-brand-ink leading-tight mb-6" style={{ fontSize: "clamp(2rem, 5vw, 3rem)" }}>
+                {post.title}
+              </h1>
+            )}
 
             <hr className="border-brand-light-border mb-10" />
 
-            {/* Content */}
-            {post.content && (
+            {/* Block-based content */}
+            {hasBlocks && post.post_templates?.structure && (
+              <BlockRenderer
+                structure={post.post_templates.structure}
+                blocks={post.blocks as PostBlocks}
+              />
+            )}
+
+            {/* Classic TipTap content */}
+            {!hasBlocks && post.content && (
               <div
-                className="prose prose-lg max-w-none font-body
+                className="post-content prose prose-lg max-w-none font-body
                   prose-headings:font-condensed prose-headings:font-black prose-headings:text-brand-ink prose-headings:leading-tight
                   prose-h2:text-[1.6rem] prose-h2:mt-12 prose-h2:mb-4
                   prose-h3:text-[1.25rem] prose-h3:mt-8 prose-h3:mb-3
@@ -176,6 +193,7 @@ export default async function BlogPostPage({ params }: Props) {
           </section>
         )}
       </main>
+      <ShareButton url={`https://www.irontowerarg.com/blog/${post.slug}`} title={post.title} />
       <Footer />
     </>
   );
