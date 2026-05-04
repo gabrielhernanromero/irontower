@@ -1,23 +1,30 @@
+"use client";
+import { trackWhatsApp } from "@/lib/analytics";
+
 const cards = [
   {
     title: "Trabajo seguro en altura",
     desc: "Capacitación teórico-práctica certificada para operarios y técnicos que realicen tareas en altura. Incluye uso de EPP, sistemas de detención y procedimientos de emergencia.",
     wa: "Hola,%20quiero%20info%20sobre%20capacitaci%C3%B3n%20en%20altura",
+    ubicacion: "capacitacion_altura",
   },
   {
     title: "Uso y manejo de extintores",
     desc: "Taller práctico sobre identificación, operación y mantenimiento de matafuegos. Ideal para brigadistas de consorcios, comercios e industrias. Incluye simulacros reales.",
     wa: "Hola,%20quiero%20info%20sobre%20capacitaci%C3%B3n%20de%20extintores",
+    ubicacion: "capacitacion_extintores",
   },
   {
     title: "Formación de brigadistas",
     desc: "Formación completa de líderes de brigada y brigadistas de consorcios. Incluye carga de fuego, plan de evacuación, combate de incendio y extinción sobre acumuladores de litio.",
     wa: "Hola,%20quiero%20info%20sobre%20formaci%C3%B3n%20de%20brigadistas",
+    ubicacion: "capacitacion_brigadistas",
   },
   {
     title: "Acceso por cuerdas IRATA",
     desc: "Formación de técnicos en acceso por cuerdas bajo estándares IRATA. Identificación, control y eliminación de riesgos latentes en actividades verticales. Niveles 1, 2 y 3.",
     wa: "Hola,%20quiero%20info%20sobre%20formaci%C3%B3n%20IRATA",
+    ubicacion: "capacitacion_irata",
   },
 ];
 
@@ -40,7 +47,7 @@ export default function Training() {
           className="grid mt-14 gap-[2px]"
           style={{ gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))" }}
         >
-          {cards.map(({ title, desc, wa }) => (
+          {cards.map(({ title, desc, wa, ubicacion }) => (
             <div
               key={title}
               className="px-8 py-10"
@@ -57,6 +64,7 @@ export default function Training() {
                 href={`https://wa.me/541127259135?text=${wa}`}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => trackWhatsApp(ubicacion)}
                 className="font-condensed font-bold text-[13px] tracking-[0.1em] uppercase text-white pb-1 border-b-2 transition-colors duration-200 hover:border-white"
                 style={{ borderColor: "rgba(255,255,255,0.4)" }}
               >

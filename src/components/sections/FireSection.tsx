@@ -1,3 +1,6 @@
+"use client";
+import { trackWhatsApp } from "@/lib/analytics";
+
 const items = [
   "Informes de carga de fuego y evaluación de riesgos",
   "Habilitación de locales comerciales e industrias",
@@ -41,7 +44,7 @@ export default function FireSection() {
               ))}
             </ul>
 
-            <a href={WA_URL} target="_blank" rel="noopener noreferrer" className="btn-primary">
+            <a href={WA_URL} target="_blank" rel="noopener noreferrer" onClick={() => trackWhatsApp("seccion_incendios")} className="btn-primary">
               Consultar por WhatsApp
             </a>
           </div>

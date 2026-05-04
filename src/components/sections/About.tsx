@@ -1,3 +1,6 @@
+"use client";
+import { trackWhatsApp } from "@/lib/analytics";
+
 const valores = [
   "Técnicos certificados IRATA nivel 1, 2 y 3",
   "Equipo multidisciplinario en telecomunicaciones, fachadas e incendios",
@@ -43,6 +46,7 @@ export default function About() {
               href="https://wa.me/541127259135?text=Hola,%20quiero%20conocer%20m%C3%A1s%20sobre%20Iron%20Tower"
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => trackWhatsApp("seccion_nosotros")}
               className="btn-primary"
             >
               Contactar al equipo

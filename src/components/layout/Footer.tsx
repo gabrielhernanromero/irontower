@@ -1,4 +1,5 @@
 "use client";
+import { trackWhatsApp, trackContacto } from "@/lib/analytics";
 
 const navLinks = [
   { label: "Inicio",         href: "#inicio" },
@@ -10,18 +11,9 @@ const navLinks = [
 ];
 
 const contactLinks = [
-  {
-    label: "+54 11 2725-9135",
-    href: "tel:+541127259135",
-  },
-  {
-    label: "irontowerta@gmail.com",
-    href: "mailto:irontowerta@gmail.com",
-  },
-  {
-    label: "@irontowervrww",
-    href: "https://instagram.com/irontowervrww",
-  },
+  { label: "+54 11 2725-9135",     href: "tel:+541127259135",             tipo: "telefono" as const },
+  { label: "irontowerta@gmail.com", href: "mailto:irontowerta@gmail.com",  tipo: "email" as const },
+  { label: "@irontowervrww",        href: "https://instagram.com/irontowervrww", tipo: "instagram" as const },
 ];
 
 const year = new Date().getFullYear();
@@ -54,6 +46,7 @@ export default function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Instagram de Iron Tower"
+                onClick={() => trackContacto("instagram", "pie_pagina")}
                 className="w-9 h-9 flex items-center justify-center rounded-[3px] transition-colors duration-200"
                 style={{ background: "rgba(255,255,255,0.08)" }}
                 onMouseEnter={(e) => ((e.currentTarget as HTMLAnchorElement).style.background = "#E8721C")}
@@ -70,6 +63,7 @@ export default function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="WhatsApp de Iron Tower"
+                onClick={() => trackWhatsApp("pie_pagina_social")}
                 className="w-9 h-9 flex items-center justify-center rounded-[3px] transition-colors duration-200"
                 style={{ background: "rgba(255,255,255,0.08)" }}
                 onMouseEnter={(e) => ((e.currentTarget as HTMLAnchorElement).style.background = "#E8721C")}
@@ -111,12 +105,13 @@ export default function Footer() {
               Contacto
             </h4>
             <div className="flex flex-col gap-2.5">
-              {contactLinks.map(({ label, href }) => (
+              {contactLinks.map(({ label, href, tipo }) => (
                 <a
                   key={href}
                   href={href}
                   target={href.startsWith("http") ? "_blank" : undefined}
                   rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
+                  onClick={() => trackContacto(tipo, "pie_pagina")}
                   className="font-body text-sm transition-colors duration-200"
                   style={{ color: "rgba(255,255,255,0.6)" }}
                   onMouseEnter={(e) => ((e.currentTarget as HTMLAnchorElement).style.color = "#fff")}
@@ -150,6 +145,7 @@ export default function Footer() {
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Contactar por WhatsApp"
+        onClick={() => trackWhatsApp("boton_flotante")}
         className="fixed bottom-6 right-6 z-50 w-14 h-14 flex items-center justify-center rounded-full shadow-lg transition-transform duration-200 hover:scale-110"
         style={{ background: "#25D366" }}
       >

@@ -1,3 +1,6 @@
+"use client";
+import { trackWhatsApp } from "@/lib/analytics";
+
 const WA_URL =
   "https://wa.me/541127259135?text=Hola,%20le%C3%AD%20el%20blog%20de%20Iron%20Tower%20y%20quiero%20consultar%20por%20sus%20servicios";
 
@@ -23,6 +26,7 @@ export default function BlogCTA() {
         href={WA_URL}
         target="_blank"
         rel="noopener noreferrer"
+        onClick={() => trackWhatsApp("cta_blog")}
         className="inline-flex items-center gap-3 font-condensed font-bold text-[15px] tracking-[0.08em] uppercase px-8 py-4 rounded-[3px] transition-all duration-200 hover:opacity-90 hover:scale-105"
         style={{ background: "#E8721C", color: "#fff" }}
       >

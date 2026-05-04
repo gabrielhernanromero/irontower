@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { trackWhatsApp } from "@/lib/analytics";
 
 const WA_URL =
   "https://wa.me/541127259135?text=Hola,%20quiero%20consultar%20sobre%20los%20servicios";
@@ -125,7 +126,7 @@ export default function Services() {
             <span className="section-label">Nuestros servicios</span>
             <h2 className="section-title">Lo que hacemos<br />mejor que nadie.</h2>
           </div>
-          <a href={WA_URL} target="_blank" rel="noopener noreferrer" className="btn-primary">
+          <a href={WA_URL} target="_blank" rel="noopener noreferrer" onClick={() => trackWhatsApp("seccion_servicios")} className="btn-primary">
             Consultar por WhatsApp
           </a>
         </div>

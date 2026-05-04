@@ -93,7 +93,7 @@ export default async function BlogPostPage({ params }: Props) {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
-      <ReadingProgress />
+      <ReadingProgress slug={post.slug} titulo={post.title} />
       <Header />
       <main>
         {/* Cover — only shown on text posts; block posts may have a Hero block */}

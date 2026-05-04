@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { trackWhatsApp, trackContacto } from "@/lib/analytics";
 
 const WA_BASE = "https://wa.me/541127259135?text=";
 
@@ -14,6 +15,7 @@ const contactItems = [
     label: "WhatsApp",
     value: "+54 11 2725-9135",
     href: "https://wa.me/541127259135",
+    track: () => trackWhatsApp("tarjeta_contacto"),
   },
   {
     icon: (
@@ -25,6 +27,7 @@ const contactItems = [
     label: "Email",
     value: "irontowerta@gmail.com",
     href: "mailto:irontowerta@gmail.com",
+    track: () => trackContacto("email", "seccion_contacto"),
   },
   {
     icon: (
@@ -37,6 +40,7 @@ const contactItems = [
     label: "Instagram",
     value: "@irontowervrww",
     href: "https://instagram.com/irontowervrww",
+    track: () => trackContacto("instagram", "seccion_contacto"),
   },
   {
     icon: (
@@ -48,6 +52,7 @@ const contactItems = [
     label: "Zona de cobertura",
     value: "Todo el país",
     href: null,
+    track: null,
   },
 ];
 
@@ -68,6 +73,7 @@ export default function Contact() {
 
   function enviarWA(e: React.FormEvent) {
     e.preventDefault();
+    trackWhatsApp("formulario_contacto", servicio || undefined);
     const text = encodeURIComponent(
       `Hola, soy ${nombre}${empresa ? ` de ${empresa}` : ""}. Quiero consultar sobre: ${servicio || "servicios en general"}. ${mensaje}`
     );
@@ -99,7 +105,7 @@ export default function Contact() {
             </h3>
 
             <div className="flex flex-col gap-5">
-              {contactItems.map(({ icon, label, value, href }) => (
+              {contactItems.map(({ icon, label, value, href, track }) => (
                 <div key={label} className="flex items-start gap-4">
                   <div
                     className="w-10 h-10 flex items-center justify-center rounded-[2px] shrink-0 text-white"
@@ -117,6 +123,7 @@ export default function Contact() {
                         href={href}
                         target={href.startsWith("http") ? "_blank" : undefined}
                         rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
+                        onClick={() => track?.()}
                         className="font-body text-white text-[16px] hover:text-brand-orange transition-colors duration-200"
                       >
                         {value}

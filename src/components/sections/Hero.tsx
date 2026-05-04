@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { trackWhatsApp } from "@/lib/analytics";
 
 const WA_URL =
   "https://wa.me/541127259135?text=Hola,%20quiero%20solicitar%20un%20presupuesto";
@@ -91,7 +92,7 @@ export default function Hero() {
 
         {/* CTAs */}
         <div className="flex flex-wrap gap-4">
-          <a href={WA_URL} target="_blank" rel="noopener noreferrer" className="btn-primary">
+          <a href={WA_URL} target="_blank" rel="noopener noreferrer" onClick={() => trackWhatsApp("hero")} className="btn-primary">
             {WA_ICON}
             Pedir presupuesto por WhatsApp
           </a>

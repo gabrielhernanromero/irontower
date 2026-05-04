@@ -1,14 +1,15 @@
 "use client";
 
 import { useState } from "react";
+import { trackWhatsApp, trackNavClick } from "@/lib/analytics";
 
 const navLinks = [
-  { label: "Inicio",          href: "/#inicio" },
-  { label: "Nosotros",        href: "/#nosotros" },
-  { label: "Servicios",       href: "/#servicios" },
-  { label: "Capacitaciones",  href: "/#capacitaciones" },
-  { label: "Blog",            href: "/blog" },
-  { label: "Contacto",        href: "/#contacto" },
+  { label: "Inicio",          href: "/#inicio",          seccion: "inicio" },
+  { label: "Nosotros",        href: "/#nosotros",        seccion: "nosotros" },
+  { label: "Servicios",       href: "/#servicios",       seccion: "servicios" },
+  { label: "Capacitaciones",  href: "/#capacitaciones",  seccion: "capacitaciones" },
+  { label: "Blog",            href: "/blog",             seccion: "blog" },
+  { label: "Contacto",        href: "/#contacto",        seccion: "contacto" },
 ];
 
 const WA_URL =
@@ -41,6 +42,7 @@ export default function Header() {
             <li key={l.href}>
               <a
                 href={l.href}
+                onClick={() => trackNavClick(l.seccion)}
                 className="font-condensed font-semibold text-[14px] tracking-[0.08em] uppercase text-brand-ink hover:text-brand-orange transition-colors duration-200"
               >
                 {l.label}
@@ -54,6 +56,7 @@ export default function Header() {
           href={WA_URL}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => trackWhatsApp("encabezado")}
           className="hidden md:inline-flex btn-primary"
         >
           Pedir presupuesto
@@ -87,7 +90,7 @@ export default function Header() {
             <a
               key={l.href}
               href={l.href}
-              onClick={() => setOpen(false)}
+              onClick={() => { setOpen(false); trackNavClick(l.seccion); }}
               className="font-condensed font-bold text-[32px] uppercase text-white/90 hover:text-brand-orange transition-colors duration-200 tracking-widest"
             >
               {l.label}
@@ -98,7 +101,7 @@ export default function Header() {
             target="_blank"
             rel="noopener noreferrer"
             className="btn-primary mt-6"
-            onClick={() => setOpen(false)}
+            onClick={() => { setOpen(false); trackWhatsApp("encabezado_mobile"); }}
           >
             Pedir presupuesto
           </a>

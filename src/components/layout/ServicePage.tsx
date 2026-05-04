@@ -1,6 +1,8 @@
+"use client";
 import Image from "next/image";
 import Link from "next/link";
 import { Header, Footer } from "@/components/layout";
+import { trackWhatsApp } from "@/lib/analytics";
 
 const WA_BASE = "https://wa.me/541127259135?text=";
 
@@ -80,6 +82,7 @@ export default function ServicePage({
                 href={waUrl}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => trackWhatsApp("pagina_servicio_hero", badge)}
                 className="btn-primary"
               >
                 Consultar por WhatsApp
@@ -178,6 +181,7 @@ export default function ServicePage({
               href={waUrl}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => trackWhatsApp("pagina_servicio_cta", badge)}
               className="btn-primary"
             >
               Consultar por WhatsApp →
