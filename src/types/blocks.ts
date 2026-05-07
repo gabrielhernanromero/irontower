@@ -51,7 +51,7 @@ export interface TemplateStructure {
 export interface StatItem { icon: string; value: string; label: string }
 export interface SheetItem { key: string; value: string }
 
-export interface HeroContent { image?: string; title?: string; subtitle?: string }
+export interface HeroContent { image?: string; title?: string; subtitle?: string; focalX?: number; focalY?: number }
 export interface CarouselContent { images: string[] }
 export interface TextImageContent { html?: string; image?: string; imageAlt?: string }
 export interface GalleryContent { images: string[] }

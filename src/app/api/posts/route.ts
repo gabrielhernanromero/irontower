@@ -7,13 +7,13 @@ export async function POST(req: NextRequest) {
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const body = await req.json();
-  const { title, slug, excerpt, content, tags, cover_image, published, template_id, blocks } = body;
+  const { title, slug, excerpt, content, tags, cover_image, published } = body;
 
   if (!title || !slug) return NextResponse.json({ error: "Título y slug son obligatorios." }, { status: 400 });
 
   const { data, error } = await supabaseAdmin()
     .from("posts")
-    .insert([{ title, slug, excerpt, content, tags, cover_image, published, template_id, blocks }])
+    .insert([{ title, slug, excerpt, content, tags, cover_image, published }])
     .select()
     .single();
 

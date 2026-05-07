@@ -32,6 +32,7 @@ export default function HeroBlock({
             className="object-cover"
             priority
             sizes="100vw"
+            style={{ objectPosition: `${content.focalX ?? 50}% ${content.focalY ?? 50}%` }}
           />
         ) : (
           <div

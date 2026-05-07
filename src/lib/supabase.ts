@@ -1,5 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
-import type { SavedBlocksPayload, TemplateStructure } from "@/types/blocks";
+import type { PostBlocks, TemplateStructure } from "@/types/blocks";
 
 export interface Post {
   id: string;
@@ -13,7 +13,8 @@ export interface Post {
   created_at: string;
   updated_at: string;
   template_id: string | null;
-  blocks: SavedBlocksPayload | null;
+  blocks: PostBlocks | null;
+  post_templates?: { structure: TemplateStructure } | null;
 }
 
 export interface PostTemplate {
