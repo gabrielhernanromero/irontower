@@ -1,21 +1,21 @@
 "use client";
 import { useState } from "react";
 import {
-  DndContext, closestCenter, KeyboardSensor, PointerSensor,
-  useSensor, useSensors, DragEndEvent,
+  DndContext, DragOverlay, closestCenter, KeyboardSensor, PointerSensor,
+  useSensor, useSensors, DragEndEvent, DragStartEvent, useDroppable,
 } from "@dnd-kit/core";
 import {
   SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy,
   useSortable, arrayMove,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-
 import type {
-  TemplateStructure, PostBlocks, BlockType, BlockContent, Column, Row,
+  TemplateStructure, PostBlocks, BlockType, BlockContent, Row,
   HeroConfig, CarouselConfig, TextImageConfig, GalleryConfig, VideoConfig,
 } from "@/types/blocks";
 import { BLOCK_META } from "@/types/blocks";
-import RowLayoutPicker from "./RowLayoutPicker";
+import BlockPalette from "./BlockPalette";
+import BlockRenderer from "@/components/blog/renderer/BlockRenderer";
 
 // Fill components
 import HeroFill from "./blocks/HeroFill";
@@ -34,13 +34,16 @@ interface Props {
   blocks: PostBlocks;
   onStructureChange: (s: TemplateStructure) => void;
   onBlocksChange: (b: PostBlocks) => void;
+  postMeta?: { title?: string; tags?: string[] };
 }
 
 function uid() {
   return Math.random().toString(36).slice(2, 9);
 }
 
-function FillDispatcher({ type, content, onChange }: { type: BlockType; content: BlockContent; onChange: (c: BlockContent) => void }) {
+function FillDispatcher({ type, content, onChange }: {
+  type: BlockType; content: BlockContent; onChange: (c: BlockContent) => void;
+}) {
   switch (type) {
     case "hero":          return <HeroFill content={content as never} onChange={onChange as never} />;
     case "carousel":      return <CarouselFill content={content as never} onChange={onChange as never} />;
@@ -56,7 +59,9 @@ function FillDispatcher({ type, content, onChange }: { type: BlockType; content:
   }
 }
 
-function ConfigPanel({ type, config, onChange }: { type: BlockType; config: Record<string, unknown>; onChange: (c: Record<string, unknown>) => void }) {
+function ConfigPanel({ type, config, onChange }: {
+  type: BlockType; config: Record<string, unknown>; onChange: (c: Record<string, unknown>) => void;
+}) {
   if (type === "hero") {
     const c = config as unknown as HeroConfig;
     return (
@@ -89,7 +94,8 @@ function ConfigPanel({ type, config, onChange }: { type: BlockType; config: Reco
         </select>
         <label className="flex items-center gap-1.5">
           Intervalo
-          <input type="number" min={1} max={8} value={(c.interval ?? 3000) / 1000} onChange={(e) => onChange({ ...c, interval: Number(e.target.value) * 1000 })}
+          <input type="number" min={1} max={8} value={(c.interval ?? 3000) / 1000}
+            onChange={(e) => onChange({ ...c, interval: Number(e.target.value) * 1000 })}
             className="w-12 border border-brand-light-border rounded px-1 py-1 text-center" />
           s
         </label>
@@ -134,94 +140,150 @@ function ConfigPanel({ type, config, onChange }: { type: BlockType; config: Reco
   return null;
 }
 
-function SortableRow({ row, rowIdx, blocks, onDeleteRow, onChangeBlockType, onBlockContentChange, onConfigChange }:
-  {
-    row: Row; rowIdx: number; blocks: PostBlocks;
-    onDeleteRow: () => void;
-    onChangeBlockType: (colId: string, type: BlockType) => void;
-    onBlockContentChange: (rowId: string, colId: string, content: BlockContent) => void;
-    onConfigChange: (colId: string, config: Record<string, unknown>) => void;
-  }
-) {
+// Drop zone between rows
+function DropZone({ id, label }: { id: string; label?: string }) {
+  const { isOver, setNodeRef } = useDroppable({ id });
+  return (
+    <div
+      ref={setNodeRef}
+      className="h-10 rounded-[3px] border-2 border-dashed flex items-center justify-center transition-all"
+      style={{
+        borderColor: isOver ? "#E8721C" : "rgba(14,77,122,0.2)",
+        background: isOver ? "rgba(232,114,28,0.06)" : "transparent",
+      }}
+    >
+      {label && (
+        <span className="font-body text-[11px] text-brand-muted">{label}</span>
+      )}
+    </div>
+  );
+}
+
+function SortableRow({
+  row, rowIdx, blocks, activeColKey, onDeleteRow, onChangeBlockType,
+  onBlockContentChange, onConfigChange, onColClick,
+}: {
+  row: Row; rowIdx: number; blocks: PostBlocks; activeColKey: string | null;
+  onDeleteRow: () => void;
+  onChangeBlockType: (colId: string, type: BlockType) => void;
+  onBlockContentChange: (rowId: string, colId: string, content: BlockContent) => void;
+  onConfigChange: (colId: string, config: Record<string, unknown>) => void;
+  onColClick: (key: string) => void;
+}) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: row.id });
-  const style = { transform: CSS.Transform.toString(transform), transition, opacity: isDragging ? 0.5 : 1 };
+  const style = { transform: CSS.Transform.toString(transform), transition, opacity: isDragging ? 0.4 : 1 };
 
   return (
-    <div ref={setNodeRef} style={style} className="border border-brand-light-border rounded-[4px] bg-white overflow-hidden">
-      {/* Row header */}
-      <div className="flex items-center justify-between px-4 py-2 border-b border-brand-light-border" style={{ background: "#f7fafd" }}>
-        <div className="flex items-center gap-2">
-          <button type="button" {...attributes} {...listeners} className="cursor-grab text-brand-muted hover:text-brand-ink text-lg leading-none px-1" title="Arrastrar para ordenar">
-            ⠿
+    <div ref={setNodeRef} style={style}>
+      <div className="border border-brand-light-border rounded-[4px] bg-white overflow-hidden">
+        {/* Row header */}
+        <div className="flex items-center justify-between px-3 py-2 border-b border-brand-light-border" style={{ background: "#f0f6fb" }}>
+          <div className="flex items-center gap-2">
+            <button type="button" {...attributes} {...listeners}
+              className="cursor-grab text-brand-muted hover:text-brand-ink text-base leading-none px-1" title="Arrastrar para ordenar">
+              ⠿
+            </button>
+            <span className="font-condensed font-bold text-[11px] text-brand-mid uppercase tracking-wide">
+              Fila {rowIdx + 1}
+            </span>
+            <span className="font-body text-[11px] text-brand-muted">
+              · {row.columns.map((c) => `${BLOCK_META[c.block.type].icon} ${BLOCK_META[c.block.type].label}`).join("  |  ")}
+            </span>
+          </div>
+          <button type="button" onClick={onDeleteRow}
+            className="font-body text-[11px] text-red-400 hover:text-red-600 transition-colors">
+            Eliminar
           </button>
-          <span className="font-condensed font-bold text-xs text-brand-mid uppercase tracking-wide">Fila {rowIdx + 1}</span>
-          <span className="font-body text-xs text-brand-muted">({row.columns.length} {row.columns.length === 1 ? "columna" : "columnas"})</span>
         </div>
-        <button type="button" onClick={onDeleteRow} className="font-body text-xs text-red-400 hover:text-red-600 transition-colors">Eliminar fila</button>
-      </div>
 
-      {/* Columns */}
-      <div className={`grid grid-cols-12 gap-4 p-4`}>
-        {row.columns.map((col) => {
-          const meta = BLOCK_META[col.block.type];
-          const content = (blocks[row.id]?.[col.id] ?? {}) as BlockContent;
-          const config = col.block.config as Record<string, unknown>;
-          const spanClass: Record<number, string> = { 4: "col-span-12 md:col-span-4", 6: "col-span-12 md:col-span-6", 8: "col-span-12 md:col-span-8", 12: "col-span-12" };
+        {/* Columns */}
+        <div className="grid grid-cols-12 gap-3 p-3">
+          {row.columns.map((col) => {
+            const meta = BLOCK_META[col.block.type];
+            const content = (blocks[row.id]?.[col.id] ?? {}) as BlockContent;
+            const config = col.block.config as Record<string, unknown>;
+            const colKey = `${row.id}-${col.id}`;
+            const isActive = activeColKey === colKey;
+            const spanClass: Record<number, string> = {
+              4: "col-span-12 md:col-span-4",
+              6: "col-span-12 md:col-span-6",
+              8: "col-span-12 md:col-span-8",
+              12: "col-span-12",
+            };
 
-          return (
-            <div key={col.id} className={`${spanClass[col.span] ?? "col-span-12"} flex flex-col gap-3`}>
-              {/* Block type selector */}
-              <div className="flex items-center gap-2">
-                <span className="text-lg">{meta.icon}</span>
+            return (
+              <div key={col.id} className={`${spanClass[col.span] ?? "col-span-12"} flex flex-col gap-2`}>
+                {/* Block header — click to expand fill */}
+                <button
+                  type="button"
+                  onClick={() => onColClick(isActive ? "" : colKey)}
+                  className="flex items-center gap-2 px-3 py-2 rounded-[3px] border-2 transition-all text-left w-full"
+                  style={{
+                    borderColor: isActive ? "#E8721C" : "#d0e8f7",
+                    background: isActive ? "rgba(232,114,28,0.05)" : "#f7fafd",
+                  }}
+                >
+                  <span className="text-lg">{meta.icon}</span>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-condensed font-bold text-[13px] text-brand-ink">{meta.label}</p>
+                    <p className="font-body text-[10px] text-brand-muted">
+                      {isActive ? "Hacé clic para cerrar" : "Hacé clic para cargar contenido"}
+                    </p>
+                  </div>
+                  <span className="font-condensed font-bold text-[11px] text-brand-mid">{isActive ? "▲" : "▼"}</span>
+                </button>
+
+                {/* Change block type */}
                 <select
                   value={col.block.type}
                   onChange={(e) => onChangeBlockType(col.id, e.target.value as BlockType)}
-                  className="flex-1 border border-brand-light-border rounded-[3px] px-2 py-1.5 font-body text-sm focus:outline-none focus:border-brand-blue bg-white"
+                  className="border border-brand-light-border rounded-[3px] px-2 py-1.5 font-body text-xs focus:outline-none focus:border-brand-blue bg-white"
                 >
                   {(Object.keys(BLOCK_META) as BlockType[]).map((t) => (
                     <option key={t} value={t}>{BLOCK_META[t].icon} {BLOCK_META[t].label}</option>
                   ))}
                 </select>
-              </div>
 
-              {/* Config */}
-              <ConfigPanel type={col.block.type} config={config} onChange={(c) => onConfigChange(col.id, c)} />
-
-              {/* Fill */}
-              <div className="border border-brand-light-border rounded-[3px] p-3" style={{ background: "#fafcfe" }}>
-                <FillDispatcher
-                  type={col.block.type}
-                  content={content}
-                  onChange={(c) => onBlockContentChange(row.id, col.id, c)}
-                />
+                {/* Expanded fill panel */}
+                {isActive && (
+                  <div className="flex flex-col gap-3 p-3 rounded-[3px] border border-brand-light-border" style={{ background: "#fafcfe" }}>
+                    <ConfigPanel type={col.block.type} config={config} onChange={(c) => onConfigChange(col.id, c)} />
+                    <FillDispatcher
+                      type={col.block.type}
+                      content={content}
+                      onChange={(c) => onBlockContentChange(row.id, col.id, c)}
+                    />
+                  </div>
+                )}
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
     </div>
   );
 }
 
-export default function BlockBuilder({ structure, blocks, onStructureChange, onBlocksChange }: Props) {
-  const [showLayoutPicker, setShowLayoutPicker] = useState(false);
+export default function BlockBuilder({ structure, blocks, onStructureChange, onBlocksChange, postMeta }: Props) {
+  const [showPreview, setShowPreview] = useState(false);
+  const [activeColKey, setActiveColKey] = useState<string | null>(null);
+  const [draggedBlockType, setDraggedBlockType] = useState<BlockType | null>(null);
 
   const sensors = useSensors(
-    useSensor(PointerSensor),
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
 
-  const addRow = (colSpans: Pick<Column, "span">[]) => {
+  const addRowWithBlock = (blockType: BlockType, atIndex?: number) => {
     const rowId = `r${uid()}`;
     const newRow: Row = {
       id: rowId,
-      columns: colSpans.map((c) => ({
-        id: `c${uid()}`,
-        span: c.span,
-        block: { type: "text", config: BLOCK_META["text"].defaultConfig },
-      })),
+      columns: [{ id: `c${uid()}`, span: 12, block: { type: blockType, config: BLOCK_META[blockType].defaultConfig } }],
     };
-    onStructureChange({ rows: [...structure.rows, newRow] });
+    const rows = [...structure.rows];
+    if (atIndex !== undefined) rows.splice(atIndex, 0, newRow);
+    else rows.push(newRow);
+    onStructureChange({ rows });
   };
 
   const deleteRow = (rowId: string) => {
@@ -241,7 +303,6 @@ export default function BlockBuilder({ structure, blocks, onStructureChange, onB
       }
     );
     onStructureChange({ rows });
-    // Clear content when changing type
     const next = { ...blocks, [rowId]: { ...(blocks[rowId] ?? {}), [colId]: {} as BlockContent } };
     onBlocksChange(next);
   };
@@ -262,53 +323,178 @@ export default function BlockBuilder({ structure, blocks, onStructureChange, onB
     onStructureChange({ rows });
   };
 
+  const saveAsTemplate = async () => {
+    const name = window.prompt("Nombre de la plantilla:");
+    if (!name?.trim()) return;
+    await fetch("/api/templates", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: name.trim(), structure }),
+    });
+    alert(`Plantilla "${name.trim()}" guardada.`);
+  };
+
+  const handleDragStart = (event: DragStartEvent) => {
+    const data = event.active.data.current;
+    if (data?.source === "palette") setDraggedBlockType(data.blockType as BlockType);
+  };
+
   const handleDragEnd = (event: DragEndEvent) => {
+    setDraggedBlockType(null);
     const { active, over } = event;
-    if (over && active.id !== over.id) {
+    if (!over) return;
+
+    const activeData = active.data.current;
+
+    // Dragged from palette → create new row
+    if (activeData?.source === "palette") {
+      const blockType = activeData.blockType as BlockType;
+      const overId = over.id as string;
+      if (overId === "canvas-bottom") {
+        addRowWithBlock(blockType);
+      } else if (overId.startsWith("drop-before-")) {
+        const rowId = overId.replace("drop-before-", "");
+        const idx = structure.rows.findIndex((r) => r.id === rowId);
+        addRowWithBlock(blockType, idx);
+      }
+      return;
+    }
+
+    // Reorder rows
+    if (active.id !== over.id) {
       const oldIdx = structure.rows.findIndex((r) => r.id === active.id);
       const newIdx = structure.rows.findIndex((r) => r.id === over.id);
-      onStructureChange({ rows: arrayMove(structure.rows, oldIdx, newIdx) });
+      if (oldIdx !== -1 && newIdx !== -1) {
+        onStructureChange({ rows: arrayMove(structure.rows, oldIdx, newIdx) });
+      }
     }
   };
 
   return (
-    <div className="flex flex-col gap-4">
-      {structure.rows.length === 0 && (
-        <div className="flex flex-col items-center justify-center py-16 rounded-[4px] border-2 border-dashed border-brand-light-border text-center">
-          <p className="font-condensed font-bold text-brand-ink text-lg mb-1">Aún no hay bloques</p>
-          <p className="font-body text-sm text-brand-muted mb-4">Agregá una fila para comenzar a construir el artículo.</p>
+    <div className="flex flex-col gap-0 border border-brand-light-border rounded-[4px] overflow-hidden" style={{ minHeight: 480 }}>
+      {/* Toolbar */}
+      <div className="flex items-center justify-between px-4 py-2 border-b border-brand-light-border" style={{ background: "#f0f6fb" }}>
+        <p className="font-condensed font-bold text-[11px] tracking-[0.1em] uppercase text-brand-mid">
+          Constructor de bloques
+        </p>
+        <div className="flex items-center gap-2">
+          {structure.rows.length > 0 && (
+            <button type="button" onClick={saveAsTemplate}
+              className="font-condensed font-bold text-[11px] tracking-[0.08em] uppercase px-3 py-1.5 rounded-[3px] border border-brand-light-border text-brand-mid hover:border-brand-blue hover:text-brand-blue transition-colors">
+              Guardar plantilla
+            </button>
+          )}
+          <button type="button" onClick={() => setShowPreview((v) => !v)}
+            className="font-condensed font-bold text-[11px] tracking-[0.08em] uppercase px-3 py-1.5 rounded-[3px] transition-colors"
+            style={showPreview
+              ? { background: "#0e4d7a", color: "#fff" }
+              : { background: "#e8f2f9", color: "#0e4d7a", border: "1px solid #b0d0e8" }
+            }>
+            {showPreview ? "Ocultar vista previa" : "Vista previa en vivo"}
+          </button>
         </div>
-      )}
+      </div>
 
-      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-        <SortableContext items={structure.rows.map((r) => r.id)} strategy={verticalListSortingStrategy}>
-          {structure.rows.map((row, rowIdx) => (
-            <SortableRow
-              key={row.id}
-              row={row}
-              rowIdx={rowIdx}
-              blocks={blocks}
-              onDeleteRow={() => deleteRow(row.id)}
-              onChangeBlockType={(colId, type) => changeBlockType(row.id, colId, type)}
-              onBlockContentChange={updateBlockContent}
-              onConfigChange={(colId, config) => updateConfig(row.id, colId, config)}
-            />
-          ))}
-        </SortableContext>
+      {/* Main: palette + canvas */}
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+      >
+        <div className="flex flex-1" style={{ minHeight: 400 }}>
+          {/* Left: palette — hidden when preview is open to give space */}
+          {!showPreview && <BlockPalette />}
+
+          {/* Center: canvas */}
+          <div className="flex-1 flex flex-col gap-2 p-4 overflow-y-auto" style={{ background: "#fff", minWidth: 0 }}>
+            {structure.rows.length === 0 ? (
+              <DropZone id="canvas-bottom" label="Arrastrá un bloque desde la paleta para empezar" />
+            ) : (
+              <>
+                <SortableContext items={structure.rows.map((r) => r.id)} strategy={verticalListSortingStrategy}>
+                  {structure.rows.map((row, idx) => (
+                    <div key={row.id} className="flex flex-col gap-2">
+                      <DropZone id={`drop-before-${row.id}`} />
+                      <SortableRow
+                        row={row}
+                        rowIdx={idx}
+                        blocks={blocks}
+                        activeColKey={activeColKey}
+                        onDeleteRow={() => deleteRow(row.id)}
+                        onChangeBlockType={(colId, type) => changeBlockType(row.id, colId, type)}
+                        onBlockContentChange={updateBlockContent}
+                        onConfigChange={(colId, config) => updateConfig(row.id, colId, config)}
+                        onColClick={(key) => setActiveColKey(key === activeColKey ? null : key)}
+                      />
+                    </div>
+                  ))}
+                </SortableContext>
+                <DropZone id="canvas-bottom" label="Arrastrá otro bloque aquí para agregar una fila" />
+              </>
+            )}
+          </div>
+
+          {/* Right: live preview panel — simulates the real blog page */}
+          {showPreview && (
+            <div className="overflow-y-auto border-l border-brand-light-border" style={{ width: "45%", background: "#e8f2f9" }}>
+              <div className="px-3 py-2 border-b border-brand-light-border sticky top-0 z-10" style={{ background: "#f0f6fb" }}>
+                <p className="font-condensed font-bold text-[10px] tracking-[0.12em] uppercase text-brand-mid">Vista previa — como se ve publicado</p>
+              </div>
+              {structure.rows.length === 0 ? (
+                <div className="flex items-center justify-center py-24 text-center px-8">
+                  <p className="font-body text-sm text-brand-muted">Arrastrá bloques al canvas para ver la vista previa.</p>
+                </div>
+              ) : (
+                <div style={{ transformOrigin: "top left", transform: "scale(0.55)", width: "181.82%", background: "#fff" }}>
+                  {/* Nav placeholder */}
+                  <div style={{ height: 68, borderBottom: "1px solid #e5e7eb", display: "flex", alignItems: "center", padding: "0 5%", background: "#fff" }}>
+                    <span style={{ fontWeight: 900, color: "#0e4d7a", fontSize: 18, letterSpacing: "0.02em", fontFamily: "inherit" }}>IRON</span>
+                    <span style={{ fontWeight: 900, color: "#E8721C", fontSize: 18, fontFamily: "inherit" }}>TOWER</span>
+                    <span style={{ fontWeight: 400, color: "#6c8fa5", fontSize: 11, marginLeft: 8, letterSpacing: "0.1em", fontFamily: "inherit", textTransform: "uppercase" }}>Vertical Rope Work</span>
+                  </div>
+                  {/* Blog post content */}
+                  <div style={{ background: "#fff", minHeight: 400 }}>
+                    <BlockRenderer
+                      structure={structure}
+                      blocks={blocks}
+                      postMeta={{
+                        title: postMeta?.title,
+                        tags: postMeta?.tags,
+                        date: new Date().toLocaleDateString("es-AR", { year: "numeric", month: "long", day: "numeric" }),
+                        readTime: 3,
+                      }}
+                    />
+                  </div>
+                  {/* CTA footer */}
+                  <div style={{ background: "#f0f6fb", padding: "48px 5%", textAlign: "center", borderTop: "1px solid #d0e8f7" }}>
+                    <p style={{ fontWeight: 900, color: "#0e4d7a", fontSize: 26, fontFamily: "inherit", marginBottom: 16 }}>
+                      ¿Necesitás trabajos en altura certificados?
+                    </p>
+                    <div style={{ display: "inline-block", background: "#E8721C", color: "#fff", padding: "10px 28px", borderRadius: 3, fontWeight: 700, fontSize: 13 }}>
+                      Pedir presupuesto
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* DragOverlay: shows block card while dragging from palette */}
+        <DragOverlay>
+          {draggedBlockType && (
+            <div className="flex items-center gap-3 p-3 rounded-[4px] border-2 shadow-lg bg-white" style={{ borderColor: "#E8721C", width: 220 }}>
+              <span className="text-2xl">{BLOCK_META[draggedBlockType].icon}</span>
+              <div>
+                <p className="font-condensed font-bold text-[13px] text-brand-ink">{BLOCK_META[draggedBlockType].label}</p>
+                <p className="font-body text-[10px] text-brand-muted">Soltá para agregar</p>
+              </div>
+            </div>
+          )}
+        </DragOverlay>
       </DndContext>
 
-      <button
-        type="button"
-        onClick={() => setShowLayoutPicker(true)}
-        className="font-condensed font-bold text-[13px] tracking-[0.08em] uppercase py-3 rounded-[3px] border-2 transition-colors hover:opacity-80"
-        style={{ borderColor: "#0e4d7a", color: "#0e4d7a" }}
-      >
-        + Agregar fila
-      </button>
-
-      {showLayoutPicker && (
-        <RowLayoutPicker onSelect={addRow} onClose={() => setShowLayoutPicker(false)} />
-      )}
     </div>
   );
 }
