@@ -34,6 +34,7 @@ interface Props {
   blocks: PostBlocks;
   onStructureChange: (s: TemplateStructure) => void;
   onBlocksChange: (b: PostBlocks) => void;
+  postMeta?: { title?: string; tags?: string[] };
 }
 
 function uid() {
@@ -263,7 +264,7 @@ function SortableRow({
   );
 }
 
-export default function BlockBuilder({ structure, blocks, onStructureChange, onBlocksChange }: Props) {
+export default function BlockBuilder({ structure, blocks, onStructureChange, onBlocksChange, postMeta }: Props) {
   const [showPreview, setShowPreview] = useState(false);
   const [activeColKey, setActiveColKey] = useState<string | null>(null);
   const [draggedBlockType, setDraggedBlockType] = useState<BlockType | null>(null);
@@ -434,21 +435,48 @@ export default function BlockBuilder({ structure, blocks, onStructureChange, onB
             )}
           </div>
 
-          {/* Right: live preview panel */}
+          {/* Right: live preview panel — simulates the real blog page */}
           {showPreview && (
-            <div className="overflow-y-auto border-l border-brand-light-border" style={{ width: "45%", background: "#f9fbfd" }}>
+            <div className="overflow-y-auto border-l border-brand-light-border" style={{ width: "45%", background: "#e8f2f9" }}>
               <div className="px-3 py-2 border-b border-brand-light-border sticky top-0 z-10" style={{ background: "#f0f6fb" }}>
-                <p className="font-condensed font-bold text-[10px] tracking-[0.12em] uppercase text-brand-mid">Vista previa en vivo</p>
+                <p className="font-condensed font-bold text-[10px] tracking-[0.12em] uppercase text-brand-mid">Vista previa — como se ve publicado</p>
               </div>
-              <div className="scale-[0.7] origin-top-left" style={{ width: "142.86%" }}>
-                {structure.rows.length === 0 ? (
-                  <div className="flex items-center justify-center py-24 text-center px-8">
-                    <p className="font-body text-sm text-brand-muted">Arrastrá bloques al canvas para ver la vista previa.</p>
+              {structure.rows.length === 0 ? (
+                <div className="flex items-center justify-center py-24 text-center px-8">
+                  <p className="font-body text-sm text-brand-muted">Arrastrá bloques al canvas para ver la vista previa.</p>
+                </div>
+              ) : (
+                <div style={{ transformOrigin: "top left", transform: "scale(0.55)", width: "181.82%", background: "#fff" }}>
+                  {/* Nav placeholder */}
+                  <div style={{ height: 68, borderBottom: "1px solid #e5e7eb", display: "flex", alignItems: "center", padding: "0 5%", background: "#fff" }}>
+                    <span style={{ fontWeight: 900, color: "#0e4d7a", fontSize: 18, letterSpacing: "0.02em", fontFamily: "inherit" }}>IRON</span>
+                    <span style={{ fontWeight: 900, color: "#E8721C", fontSize: 18, fontFamily: "inherit" }}>TOWER</span>
+                    <span style={{ fontWeight: 400, color: "#6c8fa5", fontSize: 11, marginLeft: 8, letterSpacing: "0.1em", fontFamily: "inherit", textTransform: "uppercase" }}>Vertical Rope Work</span>
                   </div>
-                ) : (
-                  <BlockRenderer structure={structure} blocks={blocks} />
-                )}
-              </div>
+                  {/* Blog post content */}
+                  <div style={{ background: "#fff", minHeight: 400 }}>
+                    <BlockRenderer
+                      structure={structure}
+                      blocks={blocks}
+                      postMeta={{
+                        title: postMeta?.title,
+                        tags: postMeta?.tags,
+                        date: new Date().toLocaleDateString("es-AR", { year: "numeric", month: "long", day: "numeric" }),
+                        readTime: 3,
+                      }}
+                    />
+                  </div>
+                  {/* CTA footer */}
+                  <div style={{ background: "#f0f6fb", padding: "48px 5%", textAlign: "center", borderTop: "1px solid #d0e8f7" }}>
+                    <p style={{ fontWeight: 900, color: "#0e4d7a", fontSize: 26, fontFamily: "inherit", marginBottom: 16 }}>
+                      ¿Necesitás trabajos en altura certificados?
+                    </p>
+                    <div style={{ display: "inline-block", background: "#E8721C", color: "#fff", padding: "10px 28px", borderRadius: 3, fontWeight: 700, fontSize: 13 }}>
+                      Pedir presupuesto
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>

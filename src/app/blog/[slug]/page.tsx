@@ -98,85 +98,84 @@ export default async function BlogPostPage({ params }: Props) {
       <ReadingProgress slug={post.slug} titulo={post.title} />
       <Header />
       <main>
-        {/* Cover — only shown on text posts; block posts may have a Hero block */}
-        {post.cover_image && !hasBlocks && (
-          <div className="relative h-[50vh] min-h-[320px] w-full">
-            <Image
-              src={post.cover_image}
-              alt={post.title}
-              fill
-              className="object-cover"
-              priority
-              sizes="100vw"
+        {/* ── BLOCK-BASED POST ─────────────────────────────────────────────── */}
+        {hasBlocks && blockStructure && (
+          <>
+            <BlockRenderer
+              structure={blockStructure}
+              blocks={savedBlocks as unknown as PostBlocks}
+              postMeta={{ title: post.title, tags: post.tags ?? [], date, readTime }}
             />
-            <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, rgba(10,58,92,0.3) 0%, rgba(10,58,92,0.7) 100%)" }} />
-          </div>
+            <div className="px-[5%] py-12">
+              <div className="max-w-[800px] mx-auto">
+                <BlogCTA />
+              </div>
+            </div>
+          </>
         )}
 
-        {/* Article */}
-        <article className="px-[5%] py-16">
-          <div className={hasBlocks ? "max-w-[1100px] mx-auto" : "max-w-[800px] mx-auto"}>
-            {/* Meta */}
-            <div className="flex flex-wrap items-center gap-3 mb-6">
-              <Link href="/blog" className="font-condensed font-bold text-[11px] tracking-[0.12em] uppercase hover:text-brand-orange transition-colors" style={{ color: "#0e4d7a" }}>
-                ← Blog
-              </Link>
-              <span className="text-brand-muted text-xs">·</span>
-              <span className="font-body text-xs text-brand-muted">{date}</span>
-              <span className="text-brand-muted text-xs">·</span>
-              <span className="font-body text-xs text-brand-muted">{readTime} min de lectura</span>
-            </div>
-
-            {/* Tags */}
-            {post.tags && post.tags.length > 0 && (
-              <div className="flex flex-wrap gap-2 mb-5">
-                {post.tags.map((tag) => (
-                  <span key={tag} className="font-body text-[11px] tracking-[0.08em] uppercase px-3 py-1 rounded-[2px]" style={{ background: "rgba(14,77,122,0.08)", color: "#0e4d7a" }}>
-                    {tag}
-                  </span>
-                ))}
+        {/* ── TEXT-BASED POST ───────────────────────────────────────────────── */}
+        {!hasBlocks && (
+          <>
+            {post.cover_image && (
+              <div className="relative h-[50vh] min-h-[320px] w-full">
+                <Image
+                  src={post.cover_image}
+                  alt={post.title}
+                  fill
+                  className="object-cover"
+                  priority
+                  sizes="100vw"
+                />
+                <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, rgba(10,58,92,0.3) 0%, rgba(10,58,92,0.7) 100%)" }} />
               </div>
             )}
-
-            {!hasBlocks && (
-              <h1 className="font-condensed font-black text-brand-ink leading-tight mb-6" style={{ fontSize: "clamp(2rem, 5vw, 3rem)" }}>
-                {post.title}
-              </h1>
-            )}
-
-            <hr className="border-brand-light-border mb-10" />
-
-            {/* Block-based content */}
-            {hasBlocks && blockStructure && (
-              <BlockRenderer
-                structure={blockStructure}
-                blocks={savedBlocks as unknown as PostBlocks}
-              />
-            )}
-
-            {/* Classic TipTap content */}
-            {!hasBlocks && post.content && (
-              <div
-                className="post-content prose prose-lg max-w-none font-body
-                  prose-headings:font-condensed prose-headings:font-black prose-headings:text-brand-ink prose-headings:leading-tight
-                  prose-h2:text-[1.6rem] prose-h2:mt-12 prose-h2:mb-4
-                  prose-h3:text-[1.25rem] prose-h3:mt-8 prose-h3:mb-3
-                  prose-p:text-brand-mid prose-p:leading-[1.8]
-                  prose-a:text-brand-blue-dark prose-a:no-underline hover:prose-a:underline
-                  prose-strong:text-brand-ink prose-strong:font-bold
-                  prose-ul:my-5 prose-ul:list-disc prose-ul:pl-6
-                  prose-ol:my-5 prose-ol:pl-6
-                  prose-li:text-brand-mid prose-li:my-2 prose-li:leading-[1.7]
-                  prose-blockquote:border-l-4 prose-blockquote:border-brand-orange prose-blockquote:bg-brand-light-bg prose-blockquote:rounded-r-[4px] prose-blockquote:px-6 prose-blockquote:py-4 prose-blockquote:not-italic prose-blockquote:text-brand-mid
-                  prose-img:rounded-[4px] prose-img:shadow-md"
-                dangerouslySetInnerHTML={{ __html: post.content }}
-              />
-            )}
-
-            {/* CTA */}
-            <BlogCTA />
-          </div>
-        </article>
+            <article className="px-[5%] py-16">
+              <div className="max-w-[800px] mx-auto">
+                <div className="flex flex-wrap items-center gap-3 mb-6">
+                  <Link href="/blog" className="font-condensed font-bold text-[11px] tracking-[0.12em] uppercase hover:text-brand-orange transition-colors" style={{ color: "#0e4d7a" }}>
+                    ← Blog
+                  </Link>
+                  <span className="text-brand-muted text-xs">·</span>
+                  <span className="font-body text-xs text-brand-muted">{date}</span>
+                  <span className="text-brand-muted text-xs">·</span>
+                  <span className="font-body text-xs text-brand-muted">{readTime} min de lectura</span>
+                </div>
+                {post.tags && post.tags.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mb-5">
+                    {post.tags.map((tag) => (
+                      <span key={tag} className="font-body text-[11px] tracking-[0.08em] uppercase px-3 py-1 rounded-[2px]" style={{ background: "rgba(14,77,122,0.08)", color: "#0e4d7a" }}>
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                <h1 className="font-condensed font-black text-brand-ink leading-tight mb-6" style={{ fontSize: "clamp(2rem, 5vw, 3rem)" }}>
+                  {post.title}
+                </h1>
+                <hr className="border-brand-light-border mb-10" />
+                {post.content && (
+                  <div
+                    className="post-content prose prose-lg max-w-none font-body
+                      prose-headings:font-condensed prose-headings:font-black prose-headings:text-brand-ink prose-headings:leading-tight
+                      prose-h2:text-[1.6rem] prose-h2:mt-12 prose-h2:mb-4
+                      prose-h3:text-[1.25rem] prose-h3:mt-8 prose-h3:mb-3
+                      prose-p:text-brand-mid prose-p:leading-[1.8]
+                      prose-a:text-brand-blue-dark prose-a:no-underline hover:prose-a:underline
+                      prose-strong:text-brand-ink prose-strong:font-bold
+                      prose-ul:my-5 prose-ul:list-disc prose-ul:pl-6
+                      prose-ol:my-5 prose-ol:pl-6
+                      prose-li:text-brand-mid prose-li:my-2 prose-li:leading-[1.7]
+                      prose-blockquote:border-l-4 prose-blockquote:border-brand-orange prose-blockquote:bg-brand-light-bg prose-blockquote:rounded-r-[4px] prose-blockquote:px-6 prose-blockquote:py-4 prose-blockquote:not-italic prose-blockquote:text-brand-mid
+                      prose-img:rounded-[4px] prose-img:shadow-md"
+                    dangerouslySetInnerHTML={{ __html: post.content }}
+                  />
+                )}
+                <BlogCTA />
+              </div>
+            </article>
+          </>
+        )}
 
         {/* Related posts */}
         {related.length > 0 && (

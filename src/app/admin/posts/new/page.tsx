@@ -171,6 +171,7 @@ export default function NewPostPage() {
               blocks={blocks}
               onStructureChange={setStructure}
               onBlocksChange={setBlocks}
+              postMeta={{ title, tags }}
             />
           </div>
 

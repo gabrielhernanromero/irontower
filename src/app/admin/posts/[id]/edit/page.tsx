@@ -190,6 +190,7 @@ export default function EditPostPage() {
               blocks={blocks}
               onStructureChange={setStructure}
               onBlocksChange={setBlocks}
+              postMeta={{ title, tags }}
             />
           </div>
 
