@@ -175,7 +175,7 @@ export default function TemplatesPage() {
                   </div>
                   <div>
                     <p className="font-condensed font-bold text-brand-ink text-base">{tpl.name}</p>
-                    <p className="font-body text-xs text-brand-muted">{tpl.structure.rows.length} filas · {tpl.structure.rows.reduce((sum: number, r) => sum + r.columns.length, 0)} bloques</p>
+                    <p className="font-body text-xs text-brand-muted">{tpl.structure.rows.length} filas · {tpl.structure.rows.reduce((sum, r) => sum + r.columns.length, 0)} bloques</p>
                   </div>
                 </div>
                 <button type="button" onClick={() => deleteTemplate(tpl.id)} disabled={deletingId === tpl.id}
