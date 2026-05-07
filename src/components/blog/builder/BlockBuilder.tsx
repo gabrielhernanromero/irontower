@@ -9,16 +9,13 @@ import {
   useSortable, arrayMove,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import dynamic from "next/dynamic";
-
 import type {
   TemplateStructure, PostBlocks, BlockType, BlockContent, Row,
   HeroConfig, CarouselConfig, TextImageConfig, GalleryConfig, VideoConfig,
 } from "@/types/blocks";
 import { BLOCK_META } from "@/types/blocks";
 import BlockPalette from "./BlockPalette";
-
-const PreviewModal = dynamic(() => import("./PreviewModal"), { ssr: false });
+import BlockRenderer from "@/components/blog/renderer/BlockRenderer";
 
 // Fill components
 import HeroFill from "./blocks/HeroFill";
@@ -386,10 +383,13 @@ export default function BlockBuilder({ structure, blocks, onStructureChange, onB
               Guardar plantilla
             </button>
           )}
-          <button type="button" onClick={() => setShowPreview(true)}
-            className="font-condensed font-bold text-[11px] tracking-[0.08em] uppercase px-3 py-1.5 rounded-[3px] text-white transition-opacity hover:opacity-90"
-            style={{ background: "#0e4d7a" }}>
-            Vista previa
+          <button type="button" onClick={() => setShowPreview((v) => !v)}
+            className="font-condensed font-bold text-[11px] tracking-[0.08em] uppercase px-3 py-1.5 rounded-[3px] transition-colors"
+            style={showPreview
+              ? { background: "#0e4d7a", color: "#fff" }
+              : { background: "#e8f2f9", color: "#0e4d7a", border: "1px solid #b0d0e8" }
+            }>
+            {showPreview ? "Ocultar vista previa" : "Vista previa en vivo"}
           </button>
         </div>
       </div>
@@ -402,11 +402,11 @@ export default function BlockBuilder({ structure, blocks, onStructureChange, onB
         onDragEnd={handleDragEnd}
       >
         <div className="flex flex-1" style={{ minHeight: 400 }}>
-          {/* Left: palette */}
-          <BlockPalette />
+          {/* Left: palette — hidden when preview is open to give space */}
+          {!showPreview && <BlockPalette />}
 
-          {/* Right: canvas */}
-          <div className="flex-1 flex flex-col gap-2 p-4 overflow-y-auto" style={{ background: "#fff" }}>
+          {/* Center: canvas */}
+          <div className="flex-1 flex flex-col gap-2 p-4 overflow-y-auto" style={{ background: "#fff", minWidth: 0 }}>
             {structure.rows.length === 0 ? (
               <DropZone id="canvas-bottom" label="Arrastrá un bloque desde la paleta para empezar" />
             ) : (
@@ -433,6 +433,24 @@ export default function BlockBuilder({ structure, blocks, onStructureChange, onB
               </>
             )}
           </div>
+
+          {/* Right: live preview panel */}
+          {showPreview && (
+            <div className="overflow-y-auto border-l border-brand-light-border" style={{ width: "45%", background: "#f9fbfd" }}>
+              <div className="px-3 py-2 border-b border-brand-light-border sticky top-0 z-10" style={{ background: "#f0f6fb" }}>
+                <p className="font-condensed font-bold text-[10px] tracking-[0.12em] uppercase text-brand-mid">Vista previa en vivo</p>
+              </div>
+              <div className="scale-[0.7] origin-top-left" style={{ width: "142.86%" }}>
+                {structure.rows.length === 0 ? (
+                  <div className="flex items-center justify-center py-24 text-center px-8">
+                    <p className="font-body text-sm text-brand-muted">Arrastrá bloques al canvas para ver la vista previa.</p>
+                  </div>
+                ) : (
+                  <BlockRenderer structure={structure} blocks={blocks} />
+                )}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* DragOverlay: shows block card while dragging from palette */}
@@ -449,10 +467,6 @@ export default function BlockBuilder({ structure, blocks, onStructureChange, onB
         </DragOverlay>
       </DndContext>
 
-      {/* Preview modal */}
-      {showPreview && (
-        <PreviewModal structure={structure} blocks={blocks} onClose={() => setShowPreview(false)} />
-      )}
     </div>
   );
 }
