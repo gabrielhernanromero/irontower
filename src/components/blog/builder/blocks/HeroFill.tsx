@@ -1,6 +1,5 @@
 "use client";
 import { useRef } from "react";
-import Image from "next/image";
 import type { HeroContent } from "@/types/blocks";
 import { uploadImage } from "../uploadImage";
 
@@ -49,33 +48,37 @@ export default function HeroFill({ content, onChange }: Props) {
 
         {content.image ? (
           <>
-            {/* Focal point picker */}
+            {/* Focal point picker — usar div+backgroundImage para que los overlays sean visibles */}
             <div
               ref={imageRef}
-              className="relative rounded-[3px] overflow-hidden mb-1 select-none"
-              style={{ height: 120, cursor: "crosshair" }}
+              className="relative rounded-[3px] mb-1 select-none"
+              style={{
+                height: 120,
+                cursor: "crosshair",
+                backgroundImage: `url(${content.image})`,
+                backgroundSize: "cover",
+                backgroundPosition: `${focalX}% ${focalY}%`,
+                overflow: "hidden",
+              }}
               onPointerDown={handlePointerDown}
               onPointerMove={handlePointerMove}
               onPointerUp={handlePointerUp}
             >
-              <Image
-                src={content.image}
-                alt="Hero"
-                fill
-                className="object-cover pointer-events-none"
-                style={{ objectPosition: `${focalX}% ${focalY}%` }}
-              />
-              {/* Crosshair lines */}
+              {/* Grid semitransparente */}
               <div
-                className="absolute inset-0 pointer-events-none"
+                className="absolute inset-0"
                 style={{
-                  backgroundImage: `linear-gradient(rgba(255,255,255,0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.15) 1px, transparent 1px)`,
+                  backgroundImage: `linear-gradient(rgba(255,255,255,0.18) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.18) 1px, transparent 1px)`,
                   backgroundSize: "25% 25%",
+                  pointerEvents: "none",
                 }}
               />
+              {/* Líneas de cruz */}
+              <div className="absolute" style={{ left: `${focalX}%`, top: 0, bottom: 0, width: 1, background: "rgba(255,255,255,0.5)", transform: "translateX(-50%)", pointerEvents: "none" }} />
+              <div className="absolute" style={{ top: `${focalY}%`, left: 0, right: 0, height: 1, background: "rgba(255,255,255,0.5)", transform: "translateY(-50%)", pointerEvents: "none" }} />
               {/* Focal point dot */}
               <div
-                className="absolute pointer-events-none"
+                className="absolute"
                 style={{
                   left: `${focalX}%`,
                   top: `${focalY}%`,

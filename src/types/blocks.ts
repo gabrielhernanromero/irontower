@@ -51,7 +51,7 @@ export interface TemplateStructure {
 export interface StatItem { icon: string; value: string; label: string }
 export interface SheetItem { key: string; value: string }
 
-export interface HeroContent { image?: string; title?: string; subtitle?: string; focalX?: number; focalY?: number }
+export interface HeroContent { image?: string; title?: string; subtitle?: string }
 export interface CarouselContent { images: string[] }
 export interface TextImageContent { html?: string; image?: string; imageAlt?: string }
 export interface GalleryContent { images: string[] }
@@ -75,9 +75,6 @@ export type BlockContent =
   | ProjectSheetContent;
 
 export type PostBlocks = Record<string, Record<string, BlockContent>>;
-
-// Format stored in the DB: structure embedded under "_s" + content rows
-export type SavedBlocksPayload = { _s: TemplateStructure } & Record<string, Record<string, BlockContent>>;
 
 // ---- Template full type ----
 export interface PostTemplate {
