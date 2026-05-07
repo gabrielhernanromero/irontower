@@ -76,6 +76,9 @@ export type BlockContent =
 
 export type PostBlocks = Record<string, Record<string, BlockContent>>;
 
+// Format stored in the DB: structure embedded under "_s" + content rows
+export type SavedBlocksPayload = { _s: TemplateStructure } & Record<string, Record<string, BlockContent>>;
+
 // ---- Template full type ----
 export interface PostTemplate {
   id: string;

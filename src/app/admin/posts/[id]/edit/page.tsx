@@ -5,7 +5,7 @@ import { useRouter, useParams } from "next/navigation";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import TagSelector from "@/components/blog/TagSelector";
-import type { TemplateStructure, PostBlocks } from "@/types/blocks";
+import type { TemplateStructure, PostBlocks, SavedBlocksPayload } from "@/types/blocks";
 import type { PostTemplate } from "@/lib/supabase";
 
 const RichTextEditor = dynamic(() => import("@/components/blog/RichTextEditor"), { ssr: false });
@@ -56,18 +56,13 @@ export default function EditPostPage() {
 
       if (Array.isArray(list)) setTemplates(list);
 
-      if (post.template_id && post.blocks) {
-        setMode("blocks");
-        setTemplateId(post.template_id);
-        setBlocks(post.blocks);
-        // Load structure from template
-        const tpl = Array.isArray(list) ? list.find((t: PostTemplate) => t.id === post.template_id) : null;
-        if (tpl) setStructure(tpl.structure);
-        else {
-          // Fallback: fetch template directly
-          fetch(`/api/templates/${post.template_id}`).then((r) => r.json()).then((t) => {
-            if (t.structure) setStructure(t.structure);
-          }).catch(() => {});
+      if (post.blocks) {
+        const { _s, ...contentBlocks } = post.blocks as SavedBlocksPayload;
+        if (_s) {
+          setMode("blocks");
+          setStructure(_s);
+          setBlocks(contentBlocks as PostBlocks);
+          if (post.template_id) setTemplateId(post.template_id);
         }
       }
 
@@ -97,7 +92,7 @@ export default function EditPostPage() {
     const body: Record<string, unknown> = { title, slug, excerpt, tags, cover_image: coverImage, published: pub };
     if (mode === "blocks") {
       body.template_id = templateId || null;
-      body.blocks = blocks;
+      body.blocks = { _s: structure, ...blocks } as SavedBlocksPayload;
       body.content = null;
     } else {
       body.content = content;

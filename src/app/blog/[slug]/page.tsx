@@ -7,7 +7,7 @@ import BlogCTA from "@/components/blog/BlogCTA";
 import ReadingProgress from "@/components/blog/ReadingProgress";
 import ShareButton from "@/components/blog/ShareButton";
 import BlockRenderer from "@/components/blog/renderer/BlockRenderer";
-import type { PostBlocks } from "@/types/blocks";
+import type { PostBlocks, SavedBlocksPayload } from "@/types/blocks";
 import Link from "next/link";
 
 export const revalidate = 60;
@@ -20,7 +20,7 @@ async function getPost(slug: string): Promise<Post | null> {
   try {
     const { data } = await supabase()
       .from("posts")
-      .select("*, post_templates(structure)")
+      .select("*")
       .eq("slug", slug)
       .eq("published", true)
       .single();
@@ -88,7 +88,9 @@ export default async function BlogPostPage({ params }: Props) {
     publisher: { "@type": "Organization", name: "Iron Tower", logo: { "@type": "ImageObject", url: "https://www.irontowerarg.com/favicon.ico" } },
   };
 
-  const hasBlocks = !!post.template_id && !!post.blocks;
+  const savedBlocks = post.blocks as SavedBlocksPayload | null;
+  const blockStructure = savedBlocks?._s ?? null;
+  const hasBlocks = !!blockStructure;
 
   return (
     <>
@@ -145,10 +147,10 @@ export default async function BlogPostPage({ params }: Props) {
             <hr className="border-brand-light-border mb-10" />
 
             {/* Block-based content */}
-            {hasBlocks && post.post_templates?.structure && (
+            {hasBlocks && blockStructure && (
               <BlockRenderer
-                structure={post.post_templates.structure}
-                blocks={post.blocks as PostBlocks}
+                structure={blockStructure}
+                blocks={savedBlocks as unknown as PostBlocks}
               />
             )}
 

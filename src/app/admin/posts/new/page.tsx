@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import TagSelector from "@/components/blog/TagSelector";
-import type { TemplateStructure, PostBlocks } from "@/types/blocks";
+import type { TemplateStructure, PostBlocks, SavedBlocksPayload } from "@/types/blocks";
 import type { PostTemplate } from "@/lib/supabase";
 
 const RichTextEditor = dynamic(() => import("@/components/blog/RichTextEditor"), { ssr: false });
@@ -94,9 +94,12 @@ export default function NewPostPage() {
     const body: Record<string, unknown> = { title, slug, excerpt, tags, cover_image: coverImage, published };
     if (mode === "blocks") {
       body.template_id = templateId || null;
-      body.blocks = blocks;
+      body.blocks = { _s: structure, ...blocks } as SavedBlocksPayload;
+      body.content = null;
     } else {
       body.content = content;
+      body.template_id = null;
+      body.blocks = null;
     }
 
     const res = await fetch("/api/posts", {
