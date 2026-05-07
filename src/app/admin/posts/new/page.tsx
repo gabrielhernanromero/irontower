@@ -182,7 +182,7 @@ export default function NewPostPage() {
               <p className="font-condensed font-black text-[10px] tracking-[0.14em] uppercase text-brand-mid">Propiedades</p>
             </div>
 
-            <div className="flex flex-col gap-0 divide-y" style={{ divideColor: "#e8f2f9" }}>
+            <div className="flex flex-col gap-0 divide-y divide-[#e8f2f9]">
 
               {/* Plantilla */}
               <div className="px-4 py-4">
