@@ -268,13 +268,13 @@ export default function NewPostPage() {
       <div className="mb-6 flex items-center gap-2">
         <span className="font-body text-sm text-brand-mid">Tipo de artículo:</span>
         <button type="button" onClick={() => setMode("text")}
-          className={`font-condensed font-bold text-[12px] tracking-wide uppercase px-4 py-2 rounded-[3px] border-2 transition-colors ${mode === "text" ? "text-white border-transparent" : "border-brand-light-border text-brand-mid"}`}
-          style={mode === "text" ? { background: "#0e4d7a" } : {}}>
+          className="font-condensed font-bold text-[12px] tracking-wide uppercase px-4 py-2 rounded-[3px] border-2 transition-colors border-brand-light-border text-brand-mid"
+          style={{}}>
           ✍️ Texto libre
         </button>
         <button type="button" onClick={() => setMode("blocks")}
-          className={`font-condensed font-bold text-[12px] tracking-wide uppercase px-4 py-2 rounded-[3px] border-2 transition-colors ${mode === "blocks" ? "text-white border-transparent" : "border-brand-light-border text-brand-mid"}`}
-          style={mode === "blocks" ? { background: "#0e4d7a" } : {}}>
+          className="font-condensed font-bold text-[12px] tracking-wide uppercase px-4 py-2 rounded-[3px] border-2 transition-colors text-white border-transparent"
+          style={{ background: "#0e4d7a" }}>
           🧱 Con bloques
         </button>
       </div>
