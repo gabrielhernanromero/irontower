@@ -17,7 +17,6 @@ import { BLOCK_META } from "@/types/blocks";
 import BlockPalette from "./BlockPalette";
 import BlockRenderer from "@/components/blog/renderer/BlockRenderer";
 
-// Fill components
 import HeroFill from "./blocks/HeroFill";
 import CarouselFill from "./blocks/CarouselFill";
 import GalleryFill from "./blocks/GalleryFill";
@@ -140,7 +139,6 @@ function ConfigPanel({ type, config, onChange }: {
   return null;
 }
 
-// Drop zone between rows
 function DropZone({ id, label }: { id: string; label?: string }) {
   const { isOver, setNodeRef } = useDroppable({ id });
   return (
@@ -152,9 +150,7 @@ function DropZone({ id, label }: { id: string; label?: string }) {
         background: isOver ? "rgba(232,114,28,0.06)" : "transparent",
       }}
     >
-      {label && (
-        <span className="font-body text-[11px] text-brand-muted">{label}</span>
-      )}
+      {label && <span className="font-body text-[11px] text-brand-muted">{label}</span>}
     </div>
   );
 }
@@ -176,7 +172,6 @@ function SortableRow({
   return (
     <div ref={setNodeRef} style={style}>
       <div className="border border-brand-light-border rounded-[4px] bg-white overflow-hidden">
-        {/* Row header */}
         <div className="flex items-center justify-between px-3 py-2 border-b border-brand-light-border" style={{ background: "#f0f6fb" }}>
           <div className="flex items-center gap-2">
             <button type="button" {...attributes} {...listeners}
@@ -196,7 +191,6 @@ function SortableRow({
           </button>
         </div>
 
-        {/* Columns */}
         <div className="grid grid-cols-12 gap-3 p-3">
           {row.columns.map((col) => {
             const meta = BLOCK_META[col.block.type];
@@ -213,7 +207,6 @@ function SortableRow({
 
             return (
               <div key={col.id} className={`${spanClass[col.span] ?? "col-span-12"} flex flex-col gap-2`}>
-                {/* Block header — click to expand fill */}
                 <button
                   type="button"
                   onClick={() => onColClick(isActive ? "" : colKey)}
@@ -233,7 +226,6 @@ function SortableRow({
                   <span className="font-condensed font-bold text-[11px] text-brand-mid">{isActive ? "▲" : "▼"}</span>
                 </button>
 
-                {/* Change block type */}
                 <select
                   value={col.block.type}
                   onChange={(e) => onChangeBlockType(col.id, e.target.value as BlockType)}
@@ -244,7 +236,6 @@ function SortableRow({
                   ))}
                 </select>
 
-                {/* Expanded fill panel */}
                 {isActive && (
                   <div className="flex flex-col gap-3 p-3 rounded-[3px] border border-brand-light-border" style={{ background: "#fafcfe" }}>
                     <ConfigPanel type={col.block.type} config={config} onChange={(c) => onConfigChange(col.id, c)} />
@@ -265,7 +256,6 @@ function SortableRow({
 }
 
 export default function BlockBuilder({ structure, blocks, onStructureChange, onBlocksChange, postMeta }: Props) {
-  const [showPreview, setShowPreview] = useState(false);
   const [activeColKey, setActiveColKey] = useState<string | null>(null);
   const [draggedBlockType, setDraggedBlockType] = useState<BlockType | null>(null);
 
@@ -346,7 +336,6 @@ export default function BlockBuilder({ structure, blocks, onStructureChange, onB
 
     const activeData = active.data.current;
 
-    // Dragged from palette → create new row
     if (activeData?.source === "palette") {
       const blockType = activeData.blockType as BlockType;
       const overId = over.id as string;
@@ -360,7 +349,6 @@ export default function BlockBuilder({ structure, blocks, onStructureChange, onB
       return;
     }
 
-    // Reorder rows
     if (active.id !== over.id) {
       const oldIdx = structure.rows.findIndex((r) => r.id === active.id);
       const newIdx = structure.rows.findIndex((r) => r.id === over.id);
@@ -370,44 +358,38 @@ export default function BlockBuilder({ structure, blocks, onStructureChange, onB
     }
   };
 
+  const previewScale = 0.52;
+
   return (
-    <div className="flex flex-col gap-0 border border-brand-light-border rounded-[4px] overflow-hidden" style={{ minHeight: 480 }}>
-      {/* Toolbar */}
-      <div className="flex items-center justify-between px-4 py-2 border-b border-brand-light-border" style={{ background: "#f0f6fb" }}>
-        <p className="font-condensed font-bold text-[11px] tracking-[0.1em] uppercase text-brand-mid">
-          Constructor de bloques
-        </p>
-        <div className="flex items-center gap-2">
-          {structure.rows.length > 0 && (
-            <button type="button" onClick={saveAsTemplate}
-              className="font-condensed font-bold text-[11px] tracking-[0.08em] uppercase px-3 py-1.5 rounded-[3px] border border-brand-light-border text-brand-mid hover:border-brand-blue hover:text-brand-blue transition-colors">
-              Guardar plantilla
-            </button>
-          )}
-          <button type="button" onClick={() => setShowPreview((v) => !v)}
-            className="font-condensed font-bold text-[11px] tracking-[0.08em] uppercase px-3 py-1.5 rounded-[3px] transition-colors"
-            style={showPreview
-              ? { background: "#0e4d7a", color: "#fff" }
-              : { background: "#e8f2f9", color: "#0e4d7a", border: "1px solid #b0d0e8" }
-            }>
-            {showPreview ? "Ocultar vista previa" : "Vista previa en vivo"}
-          </button>
-        </div>
-      </div>
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
+    >
+      {/* 3-panel layout: palette | canvas | live preview */}
+      <div className="flex h-full overflow-hidden">
 
-      {/* Main: palette + canvas */}
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragStart={handleDragStart}
-        onDragEnd={handleDragEnd}
-      >
-        <div className="flex flex-1" style={{ minHeight: 400 }}>
-          {/* Left: palette — hidden when preview is open to give space */}
-          {!showPreview && <BlockPalette />}
+        {/* LEFT — block palette (always visible) */}
+        <BlockPalette />
 
-          {/* Center: canvas */}
-          <div className="flex-1 flex flex-col gap-2 p-4 overflow-y-auto" style={{ background: "#fff", minWidth: 0 }}>
+        {/* CENTER — canvas */}
+        <div className="flex-1 flex flex-col overflow-hidden" style={{ background: "#fff", minWidth: 0 }}>
+          {/* Canvas toolbar */}
+          <div className="shrink-0 flex items-center justify-between px-4 py-2 border-b border-brand-light-border" style={{ background: "#f0f6fb" }}>
+            <p className="font-condensed font-bold text-[11px] tracking-[0.1em] uppercase text-brand-mid">
+              Lienzo
+            </p>
+            {structure.rows.length > 0 && (
+              <button type="button" onClick={saveAsTemplate}
+                className="font-condensed font-bold text-[11px] tracking-[0.08em] uppercase px-3 py-1.5 rounded-[3px] border border-brand-light-border text-brand-mid hover:border-brand-blue hover:text-brand-blue transition-colors">
+                Guardar como plantilla
+              </button>
+            )}
+          </div>
+
+          {/* Scrollable rows */}
+          <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-2">
             {structure.rows.length === 0 ? (
               <DropZone id="canvas-bottom" label="Arrastrá un bloque desde la paleta para empezar" />
             ) : (
@@ -430,71 +412,89 @@ export default function BlockBuilder({ structure, blocks, onStructureChange, onB
                     </div>
                   ))}
                 </SortableContext>
-                <DropZone id="canvas-bottom" label="Arrastrá otro bloque aquí para agregar una fila" />
+                <DropZone id="canvas-bottom" label="Arrastrá otro bloque aquí" />
               </>
             )}
           </div>
-
-          {/* Right: live preview panel — simulates the real blog page */}
-          {showPreview && (
-            <div className="overflow-y-auto border-l border-brand-light-border" style={{ width: "45%", background: "#e8f2f9" }}>
-              <div className="px-3 py-2 border-b border-brand-light-border sticky top-0 z-10" style={{ background: "#f0f6fb" }}>
-                <p className="font-condensed font-bold text-[10px] tracking-[0.12em] uppercase text-brand-mid">Vista previa — como se ve publicado</p>
-              </div>
-              {structure.rows.length === 0 ? (
-                <div className="flex items-center justify-center py-24 text-center px-8">
-                  <p className="font-body text-sm text-brand-muted">Arrastrá bloques al canvas para ver la vista previa.</p>
-                </div>
-              ) : (
-                <div style={{ transformOrigin: "top left", transform: "scale(0.55)", width: "181.82%", background: "#fff" }}>
-                  {/* Nav placeholder */}
-                  <div style={{ height: 68, borderBottom: "1px solid #e5e7eb", display: "flex", alignItems: "center", padding: "0 5%", background: "#fff" }}>
-                    <span style={{ fontWeight: 900, color: "#0e4d7a", fontSize: 18, letterSpacing: "0.02em", fontFamily: "inherit" }}>IRON</span>
-                    <span style={{ fontWeight: 900, color: "#E8721C", fontSize: 18, fontFamily: "inherit" }}>TOWER</span>
-                    <span style={{ fontWeight: 400, color: "#6c8fa5", fontSize: 11, marginLeft: 8, letterSpacing: "0.1em", fontFamily: "inherit", textTransform: "uppercase" }}>Vertical Rope Work</span>
-                  </div>
-                  {/* Blog post content */}
-                  <div style={{ background: "#fff", minHeight: 400 }}>
-                    <BlockRenderer
-                      structure={structure}
-                      blocks={blocks}
-                      postMeta={{
-                        title: postMeta?.title,
-                        tags: postMeta?.tags,
-                        date: new Date().toLocaleDateString("es-AR", { year: "numeric", month: "long", day: "numeric" }),
-                        readTime: 3,
-                      }}
-                    />
-                  </div>
-                  {/* CTA footer */}
-                  <div style={{ background: "#f0f6fb", padding: "48px 5%", textAlign: "center", borderTop: "1px solid #d0e8f7" }}>
-                    <p style={{ fontWeight: 900, color: "#0e4d7a", fontSize: 26, fontFamily: "inherit", marginBottom: 16 }}>
-                      ¿Necesitás trabajos en altura certificados?
-                    </p>
-                    <div style={{ display: "inline-block", background: "#E8721C", color: "#fff", padding: "10px 28px", borderRadius: 3, fontWeight: 700, fontSize: 13 }}>
-                      Pedir presupuesto
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
         </div>
 
-        {/* DragOverlay: shows block card while dragging from palette */}
-        <DragOverlay>
-          {draggedBlockType && (
-            <div className="flex items-center gap-3 p-3 rounded-[4px] border-2 shadow-lg bg-white" style={{ borderColor: "#E8721C", width: 220 }}>
-              <span className="text-2xl">{BLOCK_META[draggedBlockType].icon}</span>
-              <div>
-                <p className="font-condensed font-bold text-[13px] text-brand-ink">{BLOCK_META[draggedBlockType].label}</p>
-                <p className="font-body text-[10px] text-brand-muted">Soltá para agregar</p>
-              </div>
-            </div>
-          )}
-        </DragOverlay>
-      </DndContext>
+        {/* RIGHT — live preview (always visible) */}
+        <div
+          className="shrink-0 flex flex-col border-l border-brand-light-border overflow-hidden"
+          style={{ width: "38%", background: "#e8f2f9" }}
+        >
+          {/* Preview header */}
+          <div className="shrink-0 px-4 py-2 border-b border-brand-light-border" style={{ background: "#f0f6fb" }}>
+            <p className="font-condensed font-bold text-[11px] tracking-[0.12em] uppercase text-brand-mid">
+              Vista previa — como se verá publicado
+            </p>
+          </div>
 
-    </div>
+          {/* Scaled blog preview */}
+          <div className="flex-1 overflow-y-auto">
+            {structure.rows.length === 0 ? (
+              <div className="flex items-center justify-center py-24 text-center px-8">
+                <p className="font-body text-sm text-brand-muted">
+                  Arrastrá bloques al lienzo para ver la vista previa aquí.
+                </p>
+              </div>
+            ) : (
+              <div
+                style={{
+                  transformOrigin: "top left",
+                  transform: `scale(${previewScale})`,
+                  width: `${100 / previewScale}%`,
+                  background: "#fff",
+                }}
+              >
+                {/* Nav placeholder */}
+                <div style={{ height: 68, borderBottom: "1px solid #e5e7eb", display: "flex", alignItems: "center", padding: "0 5%", background: "#fff" }}>
+                  <span style={{ fontWeight: 900, color: "#0e4d7a", fontSize: 18, letterSpacing: "0.02em" }}>IRON</span>
+                  <span style={{ fontWeight: 900, color: "#E8721C", fontSize: 18 }}>TOWER</span>
+                  <span style={{ fontWeight: 400, color: "#6c8fa5", fontSize: 11, marginLeft: 8, letterSpacing: "0.1em", textTransform: "uppercase" }}>
+                    Vertical Rope Work
+                  </span>
+                </div>
+                {/* Blog content */}
+                <div style={{ background: "#fff", minHeight: 400 }}>
+                  <BlockRenderer
+                    structure={structure}
+                    blocks={blocks}
+                    postMeta={{
+                      title: postMeta?.title,
+                      tags: postMeta?.tags,
+                      date: new Date().toLocaleDateString("es-AR", { year: "numeric", month: "long", day: "numeric" }),
+                      readTime: 3,
+                    }}
+                  />
+                </div>
+                {/* CTA footer */}
+                <div style={{ background: "#f0f6fb", padding: "48px 5%", textAlign: "center", borderTop: "1px solid #d0e8f7" }}>
+                  <p style={{ fontWeight: 900, color: "#0e4d7a", fontSize: 26, marginBottom: 16 }}>
+                    ¿Necesitás trabajos en altura certificados?
+                  </p>
+                  <div style={{ display: "inline-block", background: "#E8721C", color: "#fff", padding: "10px 28px", borderRadius: 3, fontWeight: 700, fontSize: 13 }}>
+                    Pedir presupuesto
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* DragOverlay */}
+      <DragOverlay>
+        {draggedBlockType && (
+          <div className="flex items-center gap-3 p-3 rounded-[4px] border-2 shadow-lg bg-white" style={{ borderColor: "#E8721C", width: 220 }}>
+            <span className="text-2xl">{BLOCK_META[draggedBlockType].icon}</span>
+            <div>
+              <p className="font-condensed font-bold text-[13px] text-brand-ink">{BLOCK_META[draggedBlockType].label}</p>
+              <p className="font-body text-[10px] text-brand-muted">Soltá para agregar</p>
+            </div>
+          </div>
+        )}
+      </DragOverlay>
+    </DndContext>
   );
 }
