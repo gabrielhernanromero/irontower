@@ -4,42 +4,167 @@ import type { PostTemplate } from "@/lib/supabase";
 import type { TemplateStructure } from "@/types/blocks";
 import { BLOCK_META } from "@/types/blocks";
 
-const PRESETS: { name: string; structure: TemplateStructure }[] = [
+const PRESETS: { name: string; description: string; structure: TemplateStructure }[] = [
   {
-    name: "Caso de Éxito",
+    name: "Caso de Éxito Premium",
+    description: "Hero · Stats · Texto · Texto+Img · Antes/Después · Ficha+Testimonio · Carrusel",
     structure: {
       rows: [
         { id: "r1", columns: [{ id: "c1", span: 12, block: { type: "hero", config: { overlay: true, textPosition: "center" } } }] },
-        { id: "r2", columns: [
-          { id: "c1", span: 6, block: { type: "stats", config: { items: 4 } } },
-          { id: "c2", span: 6, block: { type: "project_sheet", config: {} } },
+        { id: "r2", columns: [{ id: "c1", span: 12, block: { type: "stats", config: { items: 4 } } }] },
+        { id: "r3", columns: [{ id: "c1", span: 12, block: { type: "text", config: {} } }] },
+        { id: "r4", columns: [{ id: "c1", span: 12, block: { type: "text_image", config: { imagePosition: "right" } } }] },
+        { id: "r5", columns: [{ id: "c1", span: 12, block: { type: "before_after", config: {} } }] },
+        { id: "r6", columns: [
+          { id: "c1", span: 6, block: { type: "project_sheet", config: {} } },
+          { id: "c2", span: 6, block: { type: "testimonial", config: {} } },
         ]},
-        { id: "r3", columns: [{ id: "c1", span: 12, block: { type: "before_after", config: {} } }] },
-        { id: "r4", columns: [{ id: "c1", span: 12, block: { type: "carousel", config: { autoplay: true, interval: 3000, effect: "slide" } } }] },
+        { id: "r7", columns: [{ id: "c1", span: 12, block: { type: "carousel", config: { autoplay: true, interval: 4000, effect: "slide" } } }] },
       ],
     },
   },
   {
-    name: "Artículo con Galería",
+    name: "Guía Técnica Paso a Paso",
+    description: "Hero · Intro · Paso 1 · Paso 2 · Paso 3 · Stats · Conclusión",
     structure: {
       rows: [
         { id: "r1", columns: [{ id: "c1", span: 12, block: { type: "hero", config: { overlay: true, textPosition: "bottom" } } }] },
         { id: "r2", columns: [{ id: "c1", span: 12, block: { type: "text", config: {} } }] },
-        { id: "r3", columns: [{ id: "c1", span: 12, block: { type: "gallery", config: { columns: 3 } } }] },
-        { id: "r4", columns: [{ id: "c1", span: 12, block: { type: "testimonial", config: {} } }] },
+        { id: "r3", columns: [{ id: "c1", span: 12, block: { type: "text_image", config: { imagePosition: "right" } } }] },
+        { id: "r4", columns: [{ id: "c1", span: 12, block: { type: "text_image", config: { imagePosition: "left" } } }] },
+        { id: "r5", columns: [{ id: "c1", span: 12, block: { type: "text_image", config: { imagePosition: "right" } } }] },
+        { id: "r6", columns: [{ id: "c1", span: 12, block: { type: "stats", config: { items: 4 } } }] },
+        { id: "r7", columns: [{ id: "c1", span: 12, block: { type: "text", config: {} } }] },
       ],
     },
   },
   {
-    name: "Nota técnica",
+    name: "Video Feature",
+    description: "Hero · Contexto · Video · Stats+Ficha · Análisis · Testimonio",
     structure: {
       rows: [
-        { id: "r1", columns: [{ id: "c1", span: 12, block: { type: "text", config: {} } }] },
-        { id: "r2", columns: [
-          { id: "c1", span: 6, block: { type: "text_image", config: { imagePosition: "right" } } },
-          { id: "c2", span: 6, block: { type: "stats", config: { items: 4 } } },
-        ]},
+        { id: "r1", columns: [{ id: "c1", span: 12, block: { type: "hero", config: { overlay: true, textPosition: "center" } } }] },
+        { id: "r2", columns: [{ id: "c1", span: 12, block: { type: "text", config: {} } }] },
         { id: "r3", columns: [{ id: "c1", span: 12, block: { type: "video", config: { autoplay: false } } }] },
+        { id: "r4", columns: [
+          { id: "c1", span: 8, block: { type: "stats", config: { items: 4 } } },
+          { id: "c2", span: 4, block: { type: "project_sheet", config: {} } },
+        ]},
+        { id: "r5", columns: [{ id: "c1", span: 12, block: { type: "text", config: {} } }] },
+        { id: "r6", columns: [{ id: "c1", span: 12, block: { type: "testimonial", config: {} } }] },
+      ],
+    },
+  },
+  {
+    name: "Showcase Visual",
+    description: "Hero · Stats · Galería · Antes/Después · Texto+Img · Ficha+Testimonio",
+    structure: {
+      rows: [
+        { id: "r1", columns: [{ id: "c1", span: 12, block: { type: "hero", config: { overlay: true, textPosition: "center" } } }] },
+        { id: "r2", columns: [{ id: "c1", span: 12, block: { type: "stats", config: { items: 4 } } }] },
+        { id: "r3", columns: [{ id: "c1", span: 12, block: { type: "gallery", config: { columns: 3 } } }] },
+        { id: "r4", columns: [{ id: "c1", span: 12, block: { type: "before_after", config: {} } }] },
+        { id: "r5", columns: [{ id: "c1", span: 12, block: { type: "text_image", config: { imagePosition: "left" } } }] },
+        { id: "r6", columns: [
+          { id: "c1", span: 6, block: { type: "project_sheet", config: {} } },
+          { id: "c2", span: 6, block: { type: "testimonial", config: {} } },
+        ]},
+      ],
+    },
+  },
+  {
+    name: "Seguridad y Normativa",
+    description: "Hero · Stats · Problema · Ley/Norma · Campo real · Galería · Conclusión",
+    structure: {
+      rows: [
+        { id: "r1", columns: [{ id: "c1", span: 12, block: { type: "hero", config: { overlay: true, textPosition: "bottom" } } }] },
+        { id: "r2", columns: [{ id: "c1", span: 12, block: { type: "stats", config: { items: 4 } } }] },
+        { id: "r3", columns: [{ id: "c1", span: 12, block: { type: "text", config: {} } }] },
+        { id: "r4", columns: [{ id: "c1", span: 12, block: { type: "text_image", config: { imagePosition: "right" } } }] },
+        { id: "r5", columns: [{ id: "c1", span: 12, block: { type: "text_image", config: { imagePosition: "left" } } }] },
+        { id: "r6", columns: [{ id: "c1", span: 12, block: { type: "gallery", config: { columns: 2 } } }] },
+        { id: "r7", columns: [{ id: "c1", span: 12, block: { type: "text", config: {} } }] },
+      ],
+    },
+  },
+  {
+    name: "Educativo / IRATA",
+    description: "Hero · Intro · Stats · Concepto A · Concepto B · Concepto C · CTA",
+    structure: {
+      rows: [
+        { id: "r1", columns: [{ id: "c1", span: 12, block: { type: "hero", config: { overlay: true, textPosition: "center" } } }] },
+        { id: "r2", columns: [{ id: "c1", span: 12, block: { type: "text", config: {} } }] },
+        { id: "r3", columns: [{ id: "c1", span: 12, block: { type: "stats", config: { items: 3 } } }] },
+        { id: "r4", columns: [{ id: "c1", span: 12, block: { type: "text_image", config: { imagePosition: "right" } } }] },
+        { id: "r5", columns: [{ id: "c1", span: 12, block: { type: "text_image", config: { imagePosition: "left" } } }] },
+        { id: "r6", columns: [{ id: "c1", span: 12, block: { type: "text_image", config: { imagePosition: "right" } } }] },
+        { id: "r7", columns: [{ id: "c1", span: 12, block: { type: "text", config: {} } }] },
+      ],
+    },
+  },
+  {
+    name: "Antes y Después",
+    description: "Hero · Situación inicial · Antes/Después · Stats+Texto · Proceso · Carrusel · Testimonio",
+    structure: {
+      rows: [
+        { id: "r1", columns: [{ id: "c1", span: 12, block: { type: "hero", config: { overlay: true, textPosition: "center" } } }] },
+        { id: "r2", columns: [{ id: "c1", span: 12, block: { type: "text", config: {} } }] },
+        { id: "r3", columns: [{ id: "c1", span: 12, block: { type: "before_after", config: {} } }] },
+        { id: "r4", columns: [
+          { id: "c1", span: 6, block: { type: "stats", config: { items: 4 } } },
+          { id: "c2", span: 6, block: { type: "text", config: {} } },
+        ]},
+        { id: "r5", columns: [{ id: "c1", span: 12, block: { type: "text_image", config: { imagePosition: "right" } } }] },
+        { id: "r6", columns: [{ id: "c1", span: 12, block: { type: "carousel", config: { autoplay: true, interval: 3000, effect: "slide" } } }] },
+        { id: "r7", columns: [{ id: "c1", span: 12, block: { type: "testimonial", config: {} } }] },
+      ],
+    },
+  },
+  {
+    name: "Portfolio de Proyectos",
+    description: "Hero · Texto · Carrusel 1 · Stats · Carrusel 2 · Texto+Img · Ficha+Testimonio",
+    structure: {
+      rows: [
+        { id: "r1", columns: [{ id: "c1", span: 12, block: { type: "hero", config: { overlay: true, textPosition: "center" } } }] },
+        { id: "r2", columns: [{ id: "c1", span: 12, block: { type: "text", config: {} } }] },
+        { id: "r3", columns: [{ id: "c1", span: 12, block: { type: "carousel", config: { autoplay: true, interval: 3000, effect: "slide" } } }] },
+        { id: "r4", columns: [{ id: "c1", span: 12, block: { type: "stats", config: { items: 4 } } }] },
+        { id: "r5", columns: [{ id: "c1", span: 12, block: { type: "carousel", config: { autoplay: true, interval: 4000, effect: "fade" } } }] },
+        { id: "r6", columns: [{ id: "c1", span: 12, block: { type: "text_image", config: { imagePosition: "right" } } }] },
+        { id: "r7", columns: [
+          { id: "c1", span: 6, block: { type: "project_sheet", config: {} } },
+          { id: "c2", span: 6, block: { type: "testimonial", config: {} } },
+        ]},
+      ],
+    },
+  },
+  {
+    name: "Noticia / Comunicado",
+    description: "Hero · Cuerpo · Contexto+Imagen · Stats · Testimonio · Cierre",
+    structure: {
+      rows: [
+        { id: "r1", columns: [{ id: "c1", span: 12, block: { type: "hero", config: { overlay: true, textPosition: "bottom" } } }] },
+        { id: "r2", columns: [{ id: "c1", span: 12, block: { type: "text", config: {} } }] },
+        { id: "r3", columns: [{ id: "c1", span: 12, block: { type: "text_image", config: { imagePosition: "left" } } }] },
+        { id: "r4", columns: [{ id: "c1", span: 12, block: { type: "stats", config: { items: 3 } } }] },
+        { id: "r5", columns: [{ id: "c1", span: 12, block: { type: "testimonial", config: {} } }] },
+        { id: "r6", columns: [{ id: "c1", span: 12, block: { type: "text", config: {} } }] },
+      ],
+    },
+  },
+  {
+    name: "Artículo SEO Long-form",
+    description: "Hero · Intro · Stats · Punto 1 · Punto 2 · Galería · Punto 3 · Conclusión",
+    structure: {
+      rows: [
+        { id: "r1", columns: [{ id: "c1", span: 12, block: { type: "hero", config: { overlay: true, textPosition: "center" } } }] },
+        { id: "r2", columns: [{ id: "c1", span: 12, block: { type: "text", config: {} } }] },
+        { id: "r3", columns: [{ id: "c1", span: 12, block: { type: "stats", config: { items: 4 } } }] },
+        { id: "r4", columns: [{ id: "c1", span: 12, block: { type: "text_image", config: { imagePosition: "right" } } }] },
+        { id: "r5", columns: [{ id: "c1", span: 12, block: { type: "text_image", config: { imagePosition: "left" } } }] },
+        { id: "r6", columns: [{ id: "c1", span: 12, block: { type: "gallery", config: { columns: 2 } } }] },
+        { id: "r7", columns: [{ id: "c1", span: 12, block: { type: "text_image", config: { imagePosition: "right" } } }] },
+        { id: "r8", columns: [{ id: "c1", span: 12, block: { type: "text", config: {} } }] },
       ],
     },
   },
@@ -125,10 +250,13 @@ export default function TemplatesPage() {
       <div className="mb-8 bg-white rounded-[4px] p-6 border border-brand-light-border">
         <h2 className="font-condensed font-bold text-brand-ink text-lg mb-1">Plantillas prediseñadas</h2>
         <p className="font-body text-xs text-brand-muted mb-4">Guardá una de estas plantillas para usarla al crear artículos.</p>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {PRESETS.map((preset) => (
             <div key={preset.name} className="border border-brand-light-border rounded-[4px] p-4 flex flex-col gap-3">
-              <p className="font-condensed font-bold text-brand-ink text-base">{preset.name}</p>
+              <div>
+                <p className="font-condensed font-bold text-brand-ink text-base">{preset.name}</p>
+                <p className="font-body text-[11px] text-brand-muted mt-0.5">{preset.description}</p>
+              </div>
               <StructurePreview structure={preset.structure} />
               <button type="button" onClick={() => createPreset(preset)}
                 className="font-condensed font-bold text-[12px] tracking-[0.08em] uppercase py-2 rounded-[3px] border-2 transition-colors hover:opacity-80"
